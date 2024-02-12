@@ -2,12 +2,12 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "build": "cross-env NODE_ENV=production NODE_OPTIONS=--openssl-legacy-provider webpack",
-    "deploy": "yarn run predeploy && ghpages git@github.com:Maxmystere/moonrider.git -p .ghpages && shx rm -rf .ghpages",
+    "build": "cross-env NODE_ENV=production webpack",
+    "deploy": "yarn run predeploy && ghpages git@github.com:unsupervisednn/moonrider.git -p .ghpages && shx rm -rf .ghpages",
     "lint": "semistandard -v | snazzy",
     "lint:fix": "semistandard --fix",
     "predeploy": "cross-env NODE_ENV=production yarn run build && shx mkdir -p .ghpages && shx cp -r index.html assets build vendor CNAME .ghpages",
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack serve --host 0.0.0.0 --progress --color --hot-only --inline --port 3000"
+    "start": "webpack serve --host 0.0.0.0 --progress --color --hot-only --inline --port 3000"
   },
   "dependencies": {
     "@babel/core": "^7.17.2",
@@ -61,7 +61,6 @@
     ]
   },
   "engines": {
-    "node": "<=12.18.3",
-    "npm": "<=6.14.6"
+    "node": "~14.15.4"
   }
 }
