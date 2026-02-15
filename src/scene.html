@@ -184,8 +184,8 @@
           render-order="weapon"
           trail="color: {{ hand === 'right' and 'secondary' or 'primary' }}; hand: {{ hand }}">
           <a-entity
-            bind__position="has3DOFVR && '0 0 -0.5' || '0 0 0'"
-            bind__rotation="(controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '-43 0 0' || '0 0 0'">
+            bind__position="has3DOFVR && '0 0 -0.5' || (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '0 0 0.08' || '0 0 0'"
+            rotation="0 0 0">
             <a-entity
               id="{{ hand }}Laser"
               class="laser"
@@ -197,8 +197,8 @@
           </a-entity>
 
           <!-- Blade. -->
-          <a-entity bind__position="has3DOFVR && '0 0 -0.5' || '0 0 0'"
-                    bind__rotation="!isPlaying && (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '92 0 0' || (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '135 0 0' || '90 0 0'">
+          <a-entity bind__position="has3DOFVR && '0 0 -0.5' || (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '0 0 0.08' || '0 0 0'"
+                    bind__rotation="!isPlaying && (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '90 0 0' || (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '135 0 0' || '90 0 0'">
             <a-entity
               class="bladeContainer"
               bind__visible="isPlaying && gameMode === 'classic'"

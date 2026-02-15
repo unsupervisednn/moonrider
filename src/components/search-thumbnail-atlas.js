@@ -1,4 +1,5 @@
 import * as utils from '../utils';
+import normalizeCoverURL from '../lib/normalize-cover-url';
 
 var CANVAS_HEIGHT = 512; // Power-of-two.
 var HEIGHT = 64;
@@ -53,7 +54,12 @@ AFRAME.registerComponent('search-thumbnail-atlas', {
     for (let i = 0; i < results.length; i++) {
       let img = this.images[i] = this.images[i] || document.createElement('img');
       img.crossOrigin = 'anonymous';
-      img.src = results[i].coverURL;
+      const coverURL = normalizeCoverURL(
+        results[i].coverURL,
+        (results[i].versions && results[i].versions[0] && results[i].versions[0].hash) || ''
+      );
+      results[i].coverURL = coverURL;
+      img.src = coverURL;
       if (img.complete) {
         this.draw(img, i);
       } else {

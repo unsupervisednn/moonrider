@@ -74,7 +74,7 @@ AFRAME.registerComponent('search', {
 
     // Favorites.
     if (this.data.playlist === 'favorites') {
-      this.eventDetail.results = JSON.parse(localStorage.getItem('favorites-v2'));
+      this.eventDetail.results = (JSON.parse(localStorage.getItem('favorites-v2')) || []).map(convertBeatmap);
       this.el.sceneEl.emit('searchresults', this.eventDetail);
       return;
     }

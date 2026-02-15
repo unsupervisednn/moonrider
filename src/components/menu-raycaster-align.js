@@ -22,7 +22,7 @@ AFRAME.registerComponent('menu-raycaster-align', {
     // Only adjust menu ray. Leave gameplay raycaster settings untouched.
     if (isPlaying) { return; }
 
-    const direction = isMetaLike ? '0 -0.682 -0.731' : '0 0 -1';
+    const direction = '0 0 -1';
     if (direction === this.lastDirection) { return; }
 
     this.lastDirection = direction;

@@ -1,15 +1,15 @@
+import normalizeCoverURL from './normalize-cover-url';
+
 export default function convertBeatmap (src) {
-  if (src.converted) return src;
+  if (src.converted) { return src; }
 
   if (src['map']) { src = src['map']; }
 
   src['version'] = src['versions'][0]['hash'];
 
-  const coverImageCorsProxy = 'https://beatproxy.b-cdn.net/';
-
   src['directDownload'] = src['versions'][0]['downloadURL'];
 
-  src['coverURL'] = coverImageCorsProxy + src['versions'][0]['coverURL'].split('/')[3];
+  src['coverURL'] = normalizeCoverURL(src['versions'][0]['coverURL'], src['versions'][0]['hash']);
 
   let diffs = src['versions'][0]['diffs'];
 

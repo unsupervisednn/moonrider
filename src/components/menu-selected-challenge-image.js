@@ -1,3 +1,5 @@
+import normalizeCoverURL from '../lib/normalize-cover-url';
+
 AFRAME.registerComponent('menu-selected-challenge-image', {
   schema: {
     coverURL: { type: 'string' }
@@ -7,6 +9,6 @@ AFRAME.registerComponent('menu-selected-challenge-image', {
     const el = this.el;
     el.setAttribute(
       'material', 'src',
-      this.data.coverURL);
+      normalizeCoverURL(this.data.coverURL));
   }
 });

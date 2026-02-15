@@ -25,6 +25,11 @@ AFRAME.registerComponent('controller', {
       model: false,
       orientationOffset: {x: 0, y: 0, z: 0}
     });
+    el.setAttribute('meta-touch-controls', {
+      hand: data.hand,
+      model: false,
+      orientationOffset: {x: 0, y: 0, z: 0}
+    });
     el.setAttribute('vive-controls', hand);
     el.setAttribute('vive-focus-controls', hand);
     el.setAttribute('windows-motion-controls', hand);

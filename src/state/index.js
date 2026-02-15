@@ -44,7 +44,7 @@ const colorScheme = localStorage.getItem('colorScheme') || 'default';
 let favorites = localStorage.getItem('favorites-v2');
 if (favorites) {
   try {
-    favorites = JSON.parse(favorites);
+    favorites = JSON.parse(favorites).map(convertBeatmap);
   } catch (e) {
     favorites = [];
   }
