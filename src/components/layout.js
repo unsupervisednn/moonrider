@@ -13,11 +13,13 @@ AFRAME.registerComponent('layout', {
     this.layout = this.layout.bind(this);
     this.el.addEventListener('child-attached', this.layout);
     this.el.addEventListener('child-detached', this.layout);
+    this.el.addEventListener('layoutrefresh', this.layout);
   },
 
   remove: function () {
     this.el.removeEventListener('child-attached', this.layout);
     this.el.removeEventListener('child-detached', this.layout);
+    this.el.removeEventListener('layoutrefresh', this.layout);
   },
 
   update: function () {
@@ -27,12 +29,8 @@ AFRAME.registerComponent('layout', {
   layout: function () {
     const children = Array.prototype.slice.call(this.el.children)
       .filter(child => child.tagName && child.tagName.toLowerCase().startsWith('a-'))
-      .filter(child => {
-        // bind-for pools entities; skip inactive ones so layout indices stay compact.
-        if (child.object3D && child.object3D.visible === false) { return false; }
-        const visibleAttr = child.getAttribute('visible');
-        return visibleAttr !== false;
-      });
+      // bind-for pools entities; skip inactive ones so layout indices stay compact.
+      .filter(child => child.getAttribute('data-bind-for-active') !== 'false');
 
     if (!children.length) { return; }
 
@@ -70,7 +68,7 @@ AFRAME.registerComponent('layout', {
       const col = i % columns;
       const row = Math.floor(i / columns);
       const x = col * colStep;
-      const y = -row * rowStep;
+      const y = row * rowStep;
       this.setChildPosition(children[i], x, y);
     }
 

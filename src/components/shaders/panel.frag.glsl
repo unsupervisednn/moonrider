@@ -46,5 +46,7 @@ void main()
   float mid = clamp(midSection, 0.0, 1.0);
   col *= 1.0 - mid * (step(0.5 - DIFF_SECTION_WIDTH * mid, uv.x) - step(0.5 + DIFF_SECTION_WIDTH * midSection, uv.x)) * 0.3;
 
-  gl_FragColor = vec4(mix(col * isShape, borderCol, isBorder), alpha * opacity);
+  alpha *= opacity;
+  if (alpha < 0.01) { discard; }
+  gl_FragColor = vec4(mix(col * isShape, borderCol, isBorder), alpha);
 }

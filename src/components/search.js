@@ -165,9 +165,11 @@ AFRAME.registerComponent('search-result-list', {
 
   events: {
     click: function (evt) {
+      const resultEl = evt.target.closest('.searchResult');
+      if (!resultEl) { return; }
       this.el.sceneEl.emit(
         'menuchallengeselect',
-        evt.target.closest('.searchResult').dataset.id,
+        resultEl.dataset.id,
         false);
     }
   },

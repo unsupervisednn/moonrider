@@ -6,5 +6,6 @@ uniform vec3 color;
 void main() {
   float alpha = texture2D(src, uvs).a;
   alpha *= 1.0 - clamp(distance / 40.0, 0.0, 1.0);
+  if (alpha < 0.01) { discard; }
   gl_FragColor = vec4(color, alpha);
 }

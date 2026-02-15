@@ -527,8 +527,8 @@ AFRAME.registerSystem('materials', {
 
     const texture = this.beatsTexture;
     texture.generateMipmaps = false;
-    texture.magFilter = THREE.LinearFilter;
-    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.NearestFilter;
+    texture.minFilter = THREE.NearestFilter;
     texture.needsUpdate = true;
     return texture;
   },
