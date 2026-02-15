@@ -1,5 +1,3 @@
-import { SIZES } from './beat';
-
 const HEIGHT = 2.5;
 const CEILING_THICKNESS = 1.5;
 

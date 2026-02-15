@@ -60,6 +60,10 @@ if (favorites) {
  * 3. Entities and components that are `bind`ed automatically update:
  *    `bind__<componentName>="<propertyName>: some.item.in.state"`
  */
+if (typeof AFRAME.registerState !== 'function') {
+  throw new Error('AFRAME.registerState is unavailable. Ensure aframe-state-component loads before src/state/index.js.');
+}
+
 AFRAME.registerState({
   nonBindedStateKeys: ['genres'],
 

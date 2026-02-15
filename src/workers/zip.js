@@ -1,64 +1,45 @@
-var window = self;
+import unzip from 'unzip-js';
 
-var unzip = require('unzip-js')
+function chunksToUtf8 (chunks) {
+  let totalLength = 0;
+  for (const chunk of chunks) { totalLength += chunk.length; }
+  const merged = new Uint8Array(totalLength);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return new TextDecoder('utf-8').decode(merged);
+}
 
-const difficulties = [];
-
-const xhrs = {};
-
-// Fetch and unzip.
 addEventListener('message', function (evt) {
-  const difficulties = JSON.parse(evt.data.difficulties);
   const version = evt.data.version;
   const hash = evt.data.hash;
 
-  const [short] = version.split('-');
-
-
-
   unzip(evt.data.directDownload, function (err, zipFile) {
-    if (err) {
-      return console.error(err)
-    }
+    if (err) { return console.error(err); }
 
-    zipFile.readEntries(function (err, entries) {
-      if (err) {
-        return console.error(err)
-      }
+    zipFile.readEntries(function (entryError, entries) {
+      if (entryError) { return console.error(entryError); }
 
-      const data = {
-        audio: undefined,
-        beats: {}
-      };
-
+      const data = { audio: undefined, beats: {} };
       const beatFiles = {};
 
       entries.forEach(function (entry) {
-
         const chunks = [];
 
-        zipFile.readEntryData(entry, false, function (err, readStream) {
-          if (err) {
-            return console.error(err)
-          }
+        zipFile.readEntryData(entry, false, function (readError, readStream) {
+          if (readError) { return console.error(readError); }
 
-          readStream.on('data', function (chunk) { chunks.push(chunk) })
-
+          readStream.on('data', function (chunk) { chunks.push(chunk); });
           readStream.on('end', function () {
-
             if (entry.name.endsWith('.egg') || entry.name.endsWith('.ogg')) {
-              var blob = new Blob(chunks, /* { type: 'application/octet-binary' } */);
-              var url = URL.createObjectURL(blob);
-
-              data.audio = url;
+              data.audio = URL.createObjectURL(new Blob(chunks));
             } else {
+              const filename = entry.name;
+              if (!filename.toLowerCase().endsWith('.dat')) { return; }
 
-              var filename = entry.name;
-              if (!filename.toLowerCase().endsWith('.dat')) return;
-
-              var string = Buffer.concat(chunks).toString('utf8')
-              var value = JSON.parse(string);
-
+              const value = JSON.parse(chunksToUtf8(chunks));
               if (filename.toLowerCase() === 'info.dat') {
                 data.info = value;
               } else {
@@ -67,40 +48,26 @@ addEventListener('message', function (evt) {
               }
             }
 
-            if (data.audio === undefined) {
-              return;
-            }
-            if (data.info === undefined) {
-              return;
-            }
+            if (data.audio === undefined || data.info === undefined) { return; }
 
             for (const difficultyBeatmapSet of data.info._difficultyBeatmapSets) {
               const beatmapCharacteristicName = difficultyBeatmapSet._beatmapCharacteristicName;
-
               for (const difficultyBeatmap of difficultyBeatmapSet._difficultyBeatmaps) {
                 const difficulty = difficultyBeatmap._difficulty;
                 const beatmapFilename = difficultyBeatmap._beatmapFilename;
-                if (beatFiles[beatmapFilename] === undefined) {
-                  return;
-                }
+                if (beatFiles[beatmapFilename] === undefined) { return; }
 
-                const id = beatmapCharacteristicName + '-' + difficulty;
+                const id = `${beatmapCharacteristicName}-${difficulty}`;
                 if (data.beats[id] === undefined) {
                   data.beats[id] = beatFiles[beatmapFilename];
                 }
               }
             }
 
-            postMessage({ message: 'load', data: data, version: version, hash: hash });
-          })
-        })
-      })
-    })
-  })
-  return;
-
-
-
+            postMessage({ message: 'load', data, version, hash });
+          });
+        });
+      });
+    });
+  });
 });
-
-// data: {audio url, beats { difficulty JSONs },

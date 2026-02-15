@@ -1,39 +1,39 @@
-function requireAll (req) { req.keys().forEach(req); }
-
 console.time = () => {
 };
 console.timeEnd = () => {
 };
 
-require('../vendor/BufferGeometryUtils');
+import '../vendor/BufferGeometryUtils';
 
-require('aframe-aabb-collider-component');
-require('aframe-atlas-uvs-component');
-require('aframe-audioanalyser-component');
-require('aframe-event-set-component');
-require('aframe-geometry-merger-component');
-require('aframe-haptics-component');
-require('aframe-layout-component');
+import 'aframe-aabb-collider-component';
+import 'aframe-atlas-uvs-component';
+import 'aframe-audioanalyser-component';
+import 'aframe-event-set-component';
+import 'aframe-geometry-merger-component';
+import 'aframe-haptics-component';
 if (process.env.DEBUG_LOG) {
-  require('aframe-log-component');
+  import('aframe-log-component');
 } else {
   AFRAME.log = () => void 0;
 }
-require('aframe-orbit-controls');
-require('aframe-proxy-event-component');
-require('aframe-render-order-component');
-require('aframe-state-component');
-require('aframe-slice9-component');
-require('aframe-thumb-controls-component');
+import 'aframe-orbit-controls';
+import 'aframe-proxy-event-component';
+import 'aframe-slice9-component';
+import 'aframe-thumb-controls-component';
 
-requireAll(require.context('./components/', true, /\.js$/));
-requireAll(require.context('./state/', true, /\.js$/));
+import.meta.glob('./components/**/*.js', { eager: true });
+await import('aframe-state-component/dist/aframe-state-component.js');
+if (typeof AFRAME.registerState !== 'function') {
+  throw new Error('Failed to initialize aframe-state-component (AFRAME.registerState missing).');
+}
+await import('./state/index.js');
 
-require('./index.css');
+import './index.css';
+import sceneHtml from './generated/scene.html?raw';
 
-require('./scene.html');
+document.getElementById('app').innerHTML = sceneHtml;
 
-if (module.hot) { module.hot.accept(); }
+if (import.meta.hot) { import.meta.hot.accept(); }
 
 document.addEventListener('DOMContentLoaded', () => {
   initSubscribeForm();
@@ -73,7 +73,7 @@ function initSubscribeForm () {
     // supermedium/superchimp
     const xhr = new XMLHttpRequest();
     let endpoint = 'http://localhost:5000/mail/subscribe';
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       endpoint = 'https://supermedium.com/mail/subscribe';
     }
     xhr.open('POST', endpoint);

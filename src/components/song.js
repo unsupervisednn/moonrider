@@ -52,7 +52,7 @@ AFRAME.registerComponent('song', {
     this.el.addEventListener('wallhitstart', this.onWallHitStart.bind(this));
     this.el.addEventListener('wallhitend', this.onWallHitEnd.bind(this));
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (!import.meta.env.PROD) {
       this.el.addEventListener('victoryfake', () => {
         this.source.onended = null;
         this.source.stop();

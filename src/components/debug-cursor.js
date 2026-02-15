@@ -3,7 +3,7 @@
  */
 AFRAME.registerComponent('debug-cursor', {
   init: function () {
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       return;
     }
 

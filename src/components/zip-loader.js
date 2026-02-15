@@ -15,7 +15,7 @@ AFRAME.registerComponent('zip-loader', {
     this.cachedVersion = null;
 
     this.message = {};
-    this.worker = new Worker('build/zip.js');
+    this.worker = new Worker(new URL('../workers/zip.js', import.meta.url), { type: 'module' });
     this.worker.onmessage = this.onMessage.bind(this);
     this.worker.onerror = console.error;
   },

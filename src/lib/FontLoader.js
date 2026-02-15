@@ -1,8 +1,6 @@
-import {
-  FileLoader,
-  Loader,
-  ShapePath
-} from 'three';
+const FileLoader = THREE.FileLoader;
+const Loader = THREE.Loader;
+const ShapePath = THREE.ShapePath;
 
 class FontLoader extends Loader {
 
