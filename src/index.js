@@ -3,7 +3,21 @@ console.time = () => {
 console.timeEnd = () => {
 };
 
+import AFRAME from 'aframe';
 import '../vendor/BufferGeometryUtils';
+
+globalThis.AFRAME = AFRAME;
+if (!globalThis.THREE && AFRAME.THREE) {
+  globalThis.THREE = AFRAME.THREE;
+}
+if (globalThis.THREE) {
+  // Three r125+ removed *BufferGeometry aliases; some older components still use them.
+  globalThis.THREE.PlaneBufferGeometry = globalThis.THREE.PlaneBufferGeometry || globalThis.THREE.PlaneGeometry;
+  globalThis.THREE.BoxBufferGeometry = globalThis.THREE.BoxBufferGeometry || globalThis.THREE.BoxGeometry;
+  globalThis.THREE.SphereBufferGeometry = globalThis.THREE.SphereBufferGeometry || globalThis.THREE.SphereGeometry;
+  // Three r150+ removed THREE.Math in favor of MathUtils.
+  globalThis.THREE.Math = globalThis.THREE.Math || globalThis.THREE.MathUtils;
+}
 
 import 'aframe-aabb-collider-component';
 import 'aframe-atlas-uvs-component';
@@ -21,7 +35,8 @@ import 'aframe-proxy-event-component';
 import 'aframe-slice9-component';
 import 'aframe-thumb-controls-component';
 
-import.meta.glob('./components/**/*.js', { eager: true });
+const componentModules = import.meta.glob('./components/**/*.js');
+await Promise.all(Object.values(componentModules).map(loadModule => loadModule()));
 await import('aframe-state-component/dist/aframe-state-component.js');
 if (typeof AFRAME.registerState !== 'function') {
   throw new Error('Failed to initialize aframe-state-component (AFRAME.registerState missing).');

@@ -1,7 +1,9 @@
 /* global localStorage */
 import COLORS from '../constants/colors';
-const utils = require('../utils');
-const convertBeatmap = require('../lib/convert-beatmap');
+import GENRES from '../constants/genres';
+import PLAYLISTS from '../constants/playlists';
+import * as utils from '../utils';
+import convertBeatmap from '../lib/convert-beatmap';
 
 const challengeDataStore = {};
 let HAS_LOGGED_VR = false;
@@ -96,7 +98,7 @@ AFRAME.registerState({
     favorites: favorites,
     gameMode: 'ride',
     genre: '',
-    genres: require('../constants/genres'),
+    genres: GENRES,
     genreMenuOpen: false,
     has3DOFVR: false,
     has6DOFVR: false,
@@ -147,7 +149,7 @@ AFRAME.registerState({
     },
     optionsMenuOpen: false,
     playlist: '',
-    playlists: require('../constants/playlists'),
+    playlists: PLAYLISTS,
     playlistMenuOpen: false,
     playlistTitle: '',
     score: {

@@ -1,4 +1,4 @@
-import utils from '../utils';
+import * as utils from '../utils';
 
 var CANVAS_HEIGHT = 512; // Power-of-two.
 var HEIGHT = 64;

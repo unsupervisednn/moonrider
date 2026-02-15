@@ -1,5 +1,5 @@
 import { PUNCH_OFFSET, SWORD_OFFSET } from './beat-generator';
-const COLORS = require('../constants/colors.js');
+import COLORS from '../constants/colors';
 
 const auxObj3D = new THREE.Object3D();
 const bbox = new THREE.Box3();
@@ -397,7 +397,7 @@ AFRAME.registerComponent('beat', {
     el.object3D.position.x += this.beatSystem.horizontalPositions[horizontalPosition];
 
     if (data.type !== DOT) {
-      el.object3D.rotation.z = THREE.Math.degToRad(ROTATIONS[cutDirection]);
+      el.object3D.rotation.z = THREE.MathUtils.degToRad(ROTATIONS[cutDirection]);
     }
 
     // Set up rotation warmup.
@@ -417,7 +417,6 @@ AFRAME.registerComponent('beat', {
    */
   initMesh: function () {
     const blockEl = this.blockEl;
-    const el = this.el;
     const type = this.data.type;
 
     setObjModelFromTemplate(
@@ -425,17 +424,26 @@ AFRAME.registerComponent('beat', {
       MODELS[type !== 'mine' ? `${type}${this.data.color}` : type]);
 
     blockEl.setAttribute('materials', 'name', 'beat');
-    const mesh = blockEl.getObject3D('mesh');
-    mesh.geometry.computeBoundingBox();
+    const initBoundingBox = () => {
+      const mesh = blockEl.getObject3D('mesh');
+      if (!mesh || !mesh.geometry) { return false; }
+      mesh.geometry.computeBoundingBox();
+      this.bbox = mesh.geometry.boundingBox;
+      if (this.data.type === MINE) {
+        const expand = new THREE.Vector3();
+        this.bbox.getSize(expand);
+        expand.multiplyScalar(-0.25);
+        this.bbox.expandByVector(expand);
+      }
+      return true;
+    };
 
-    this.bbox = mesh.geometry.boundingBox;
+    if (initBoundingBox()) { return; }
 
-    if (this.data.type === 'mine') {
-      const expand = new THREE.Vector3();
-      this.bbox.getSize(expand);
-      expand.multiplyScalar(-0.25);
-      this.bbox.expandByVector(expand);
-    }
+    blockEl.addEventListener('object3dset', evt => {
+      if (evt.detail.type !== 'mesh') { return; }
+      initBoundingBox();
+    }, ONCE);
   },
 
   wrongHit: function () {

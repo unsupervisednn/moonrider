@@ -1,4 +1,4 @@
-const COLORS = require('../constants/colors');
+import COLORS from '../constants/colors';
 
 AFRAME.registerComponent('stars', {
   schema: {

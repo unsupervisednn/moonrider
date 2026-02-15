@@ -1,4 +1,6 @@
-const COLORS = require('../constants/colors');
+import COLORS from '../constants/colors';
+import wallVertShader from './shaders/wall.vert.glsl';
+import wallFragShader from './shaders/wall.frag.glsl';
 
 AFRAME.registerShader('wallShader', {
   schema: {
@@ -10,7 +12,7 @@ AFRAME.registerShader('wallShader', {
     opacity: {type: 'number', is: 'uniform'}
   },
 
-  vertexShader: require('./shaders/wall.vert.glsl'),
+  vertexShader: wallVertShader,
 
-  fragmentShader: require('./shaders/wall.frag.glsl')
+  fragmentShader: wallFragShader
 });

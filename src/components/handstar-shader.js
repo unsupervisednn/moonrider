@@ -1,4 +1,6 @@
 import COLORS from '../constants/colors';
+import handstarVertShader from './shaders/handstar.vert.glsl';
+import handstarFragShader from './shaders/handstar.frag.glsl';
 
 AFRAME.registerShader('handStar', {
   schema: {
@@ -11,6 +13,6 @@ AFRAME.registerShader('handStar', {
     depthTest: {default: false}
   },
 
-  vertexShader: require('./shaders/handstar.vert.glsl'),
-  fragmentShader: require('./shaders/handstar.frag.glsl')
+  vertexShader: handstarVertShader,
+  fragmentShader: handstarFragShader
 });

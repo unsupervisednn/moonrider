@@ -1,4 +1,4 @@
-module.exports = function convertBeatmap (src) {
+export default function convertBeatmap (src) {
   if (src.converted) return src;
 
   if (src['map']) { src = src['map']; }
@@ -28,4 +28,4 @@ module.exports = function convertBeatmap (src) {
   src.converted = true;
 
   return src;
-};
+}

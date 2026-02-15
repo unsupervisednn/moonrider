@@ -28,7 +28,7 @@ AFRAME.registerComponent('controller', {
     el.setAttribute('vive-controls', hand);
     el.setAttribute('vive-focus-controls', hand);
     el.setAttribute('windows-motion-controls', hand);
-    el.setAttribute('generic-tracked-controller-controls', hand);
+    el.setAttribute('generic-tracked-controller-controls', {hand: data.hand});
   },
 
   config: {

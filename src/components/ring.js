@@ -1,3 +1,6 @@
+import ringVertShader from './shaders/ring.vert.glsl';
+import ringFragShader from './shaders/ring.frag.glsl';
+
 AFRAME.registerShader('ring', {
   schema: {
     blur: {default: 0.01, is: 'uniform'},
@@ -7,7 +10,7 @@ AFRAME.registerShader('ring', {
     radiusOuter: {default: 1, is: 'uniform'}
   },
 
-  vertexShader: require('./shaders/ring.vert.glsl'),
+  vertexShader: ringVertShader,
 
-  fragmentShader: require('./shaders/ring.frag.glsl')
+  fragmentShader: ringFragShader
 });

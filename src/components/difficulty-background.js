@@ -4,7 +4,7 @@
  */
 AFRAME.registerComponent('difficulty-background', {
   schema: {
-    enabled: {type: false}
+    enabled: {default: false}
   },
 
   update: function () {

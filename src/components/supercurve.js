@@ -1,5 +1,5 @@
-require('../../vendor/Curve');
-require('../../vendor/CatmullRomCurve3');
+import '../../vendor/Curve';
+import '../../vendor/CatmullRomCurve3';
 
 const EXTRA_LENGTH = 200;
 const CURVE_SAMPLES = 350;

@@ -1,4 +1,24 @@
-const COLORS = require('../constants/colors');
+import COLORS from '../constants/colors';
+import auroraFragShader from './shaders/aurora.frag.glsl';
+import auroraVertShader from './shaders/aurora.vert.glsl';
+import fistWeaponFragShader from './shaders/fistWeapon.frag.glsl';
+import flatVertShader from './shaders/flat.vert.glsl';
+import handstartrailFragShader from './shaders/handstartrail.frag.glsl';
+import handstartrailVertShader from './shaders/handstartrail.vert.glsl';
+import homeFragShader from './shaders/home.frag.glsl';
+import homeVertShader from './shaders/home.vert.glsl';
+import moonFragShader from './shaders/moon.frag.glsl';
+import moonVertShader from './shaders/moon.vert.glsl';
+import plumeFragShader from './shaders/plume.frag.glsl';
+import plumeVertShader from './shaders/plume.vert.glsl';
+import ringsFragShader from './shaders/rings.frag.glsl';
+import ringsVertShader from './shaders/rings.vert.glsl';
+import tubeFragShader from './shaders/tube.frag.glsl';
+import tubeVertShader from './shaders/tube.vert.glsl';
+import tunnelFragShader from './shaders/tunnel.frag.glsl';
+import tunnelVertShader from './shaders/tunnel.vert.glsl';
+import weaponFragShader from './shaders/weapon.frag.glsl';
+import weaponVertShader from './shaders/weapon.vert.glsl';
 
 const auxColor = new THREE.Color();
 
@@ -66,8 +86,8 @@ AFRAME.registerSystem('materials', {
     const scheme = this.scheme;
 
     this.tunnel = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/tunnel.vert.glsl'),
-      fragmentShader: require('./shaders/tunnel.frag.glsl'),
+      vertexShader: tunnelVertShader,
+      fragmentShader: tunnelFragShader,
       uniforms: {
         fogColor: {value: new THREE.Color(scheme.primary)},
         color1: {value: new THREE.Color(scheme.primary)},
@@ -90,8 +110,8 @@ AFRAME.registerSystem('materials', {
     this.textureList.push(this.backglow.map);
 
     this.aurora = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/aurora.vert.glsl'),
-      fragmentShader: require('./shaders/aurora.frag.glsl'),
+      vertexShader: auroraVertShader,
+      fragmentShader: auroraFragShader,
       uniforms: {
         colorPrimary: {value: new THREE.Color(scheme.primary)},
         colorSecondary: {value: new THREE.Color(scheme.secondary)},
@@ -101,8 +121,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.rings = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/rings.vert.glsl'),
-      fragmentShader: require('./shaders/rings.frag.glsl'),
+      vertexShader: ringsVertShader,
+      fragmentShader: ringsFragShader,
       uniforms: {
         colorPrimary: {value: new THREE.Color(scheme.primary)},
         colorSecondary: {value: new THREE.Color(scheme.secondary)},
@@ -114,8 +134,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.moon = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/moon.vert.glsl'),
-      fragmentShader: require('./shaders/moon.frag.glsl'),
+      vertexShader: moonVertShader,
+      fragmentShader: moonFragShader,
       uniforms: {
         map: {value: new THREE.TextureLoader().load(document.getElementById('moonImg').src)},
         tint: {value: new THREE.Color(scheme.secondarybright)}
@@ -125,8 +145,8 @@ AFRAME.registerSystem('materials', {
     this.textureList.push(this.moon.uniforms.map.value);
 
     this.home = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/home.vert.glsl'),
-      fragmentShader: require('./shaders/home.frag.glsl'),
+      vertexShader: homeVertShader,
+      fragmentShader: homeFragShader,
       uniforms: {
         color1: {value: new THREE.Color(scheme.primary)},
         color2: {value: new THREE.Color(scheme.secondary)},
@@ -147,8 +167,8 @@ AFRAME.registerSystem('materials', {
     this.textureList.push(weaponTexture);
 
     this.rightWeapon = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/weapon.vert.glsl'),
-      fragmentShader: require('./shaders/weapon.frag.glsl'),
+      vertexShader: weaponVertShader,
+      fragmentShader: weaponFragShader,
       uniforms: {
         src: {value: weaponTexture},
         color: {value: new THREE.Color(scheme.secondary)},
@@ -160,8 +180,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.leftWeapon = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/weapon.vert.glsl'),
-      fragmentShader: require('./shaders/weapon.frag.glsl'),
+      vertexShader: weaponVertShader,
+      fragmentShader: weaponFragShader,
       uniforms: {
         src: {value: weaponTexture},
         color: {value: new THREE.Color(scheme.primary)},
@@ -173,8 +193,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.leftFistWeapon = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/flat.vert.glsl'),
-      fragmentShader: require('./shaders/fistWeapon.frag.glsl'),
+      vertexShader: flatVertShader,
+      fragmentShader: fistWeaponFragShader,
       uniforms: {
         src: {value: weaponTexture},
         color: {value: new THREE.Color(scheme.primary)},
@@ -186,8 +206,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.rightFistWeapon = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/flat.vert.glsl'),
-      fragmentShader: require('./shaders/fistWeapon.frag.glsl'),
+      vertexShader: flatVertShader,
+      fragmentShader: fistWeaponFragShader,
       uniforms: {
         src: {value: weaponTexture},
         color: {value: new THREE.Color(scheme.secondary)},
@@ -305,8 +325,8 @@ AFRAME.registerSystem('materials', {
     const plumeTexture = new THREE.TextureLoader().load(document.getElementById('plumeImg').src);
     plumeTexture.minFilter = THREE.LinearFilter;
     this.arrowBluePlume = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/plume.vert.glsl'),
-      fragmentShader: require('./shaders/plume.frag.glsl'),
+      vertexShader: plumeVertShader,
+      fragmentShader: plumeFragShader,
       uniforms: {
         color: {value: new THREE.Color(scheme.secondary)},
         src: {value: plumeTexture}
@@ -316,8 +336,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.arrowRedPlume = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/plume.vert.glsl'),
-      fragmentShader: require('./shaders/plume.frag.glsl'),
+      vertexShader: plumeVertShader,
+      fragmentShader: plumeFragShader,
       uniforms: {
         color: {value: new THREE.Color(scheme.primary)},
         src: {value: plumeTexture}
@@ -327,8 +347,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.dotBluePlume = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/plume.vert.glsl'),
-      fragmentShader: require('./shaders/plume.frag.glsl'),
+      vertexShader: plumeVertShader,
+      fragmentShader: plumeFragShader,
       uniforms: {
         color: {value: new THREE.Color(scheme.secondary)},
         src: {value: plumeTexture}
@@ -338,8 +358,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.dotRedPlume = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/plume.vert.glsl'),
-      fragmentShader: require('./shaders/plume.frag.glsl'),
+      vertexShader: plumeVertShader,
+      fragmentShader: plumeFragShader,
       uniforms: {
         color: {value: new THREE.Color(scheme.primary)},
         src: {value: plumeTexture}
@@ -349,8 +369,8 @@ AFRAME.registerSystem('materials', {
     });
 
     this.minePlume = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/plume.vert.glsl'),
-      fragmentShader: require('./shaders/plume.frag.glsl'),
+      vertexShader: plumeVertShader,
+      fragmentShader: plumeFragShader,
       uniforms: {
         color: {value: new THREE.Color(scheme.tertiary)},
         src: {value: plumeTexture}
@@ -366,8 +386,8 @@ AFRAME.registerSystem('materials', {
     tubeColorTexture.generateMipmaps = false;
     tubeColorTexture.minFilter = THREE.LinearFilter;
     this.tube = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/tube.vert.glsl'),
-      fragmentShader: require('./shaders/tube.frag.glsl'),
+      vertexShader: tubeVertShader,
+      fragmentShader: tubeFragShader,
       uniforms: {
         time: {value: 0},
         opacity: {value: 0},
@@ -383,8 +403,8 @@ AFRAME.registerSystem('materials', {
     trailTexture.generateMipmaps = false;
     trailTexture.minFilter = THREE.LinearFilter;
     this.handStarTrail = new THREE.ShaderMaterial({
-      vertexShader: require('./shaders/handstartrail.vert.glsl'),
-      fragmentShader: require('./shaders/handstartrail.frag.glsl'),
+      vertexShader: handstartrailVertShader,
+      fragmentShader: handstartrailFragShader,
       uniforms: {
         colorPrimary: {value: new THREE.Color(scheme.primary)},
         colorSecondary: {value: new THREE.Color(scheme.secondary)},
@@ -623,7 +643,9 @@ AFRAME.registerSystem('materials', {
   },
 
   registerPanel: function (material) {
-    this.panelMaterials.push(material);
+    if (this.panelMaterials.indexOf(material) === -1) {
+      this.panelMaterials.push(material);
+    }
   }
 });
 

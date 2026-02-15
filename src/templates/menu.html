@@ -68,9 +68,9 @@
     bind__menu-midsection="active: !!menuSelectedChallenge.id && (mainMenuActive || difficultyFilterMenuOpen) || difficultyFilterMenuOpen; selectedChallenge: menuSelectedChallenge.id"
     bind-toggle__raycastable="menuActive || genreMenuOpen || isSearching || difficultyFilterMenuOpen"
     geometry="primitive: plane; width: 3.4; height: 1.82" material="shader: panelShader; ratio: 1.86; opacity: 0"
-    animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
-    animation__midsectionshow="property: components.material.material.uniforms.midSection.value; from: 0; to: 1; dur: 160; startEvents: showdifficultysection; easing: easeOutCubic"
-    animation__midsectionhide="property: components.material.material.uniforms.midSection.value; from: 1: to: 0; dur: 160; startEvents: hidedifficultysection; easing: easeOutCubic"
+    animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+    animation__midsectionshow="property: material.midSection; from: 0; to: 1; dur: 160; startEvents: showdifficultysection; easing: easeOutCubic"
+    animation__midsectionhide="property: material.midSection; from: 1: to: 0; dur: 160; startEvents: hidedifficultysection; easing: easeOutCubic"
     render-order="menu" position="0 0 -0.005"></a-entity>
 
   <a-entity id="mainMenu" bind__visible="mainMenuActive && !isMenuOpening || isSearching">
@@ -157,8 +157,8 @@
         proxy-event="event: click; to: a-scene; as: playbuttonclick"
         material="shader: panelShader; brightness: 0.7; transparent: true; midSection: 0; ratio: 2.8; borderRadius: 0.6; borderWidth: 0.08"
         render-order="menubutton"
-        animation__mouseenter1="property: components.material.material.uniforms.activePanel.value; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
-        animation__mouseleave1="property: components.material.material.uniforms.activePanel.value; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100"
+        animation__mouseenter1="property: material.activePanel; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
+        animation__mouseleave1="property: material.activePanel; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100"
         animation__mouseenter2="property: scale; from: 1 1 1; to: 1.1 1.1 1.1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
         animation__mouseleave2="property: scale; to: 1 1 1; from: 1.1 1.1 1.1; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100">
         <a-entity mixin="font" text="align: center; color: #FFF; wrapCount: 15; value: PLAY" position="0 -0.085 0.01">
@@ -229,7 +229,7 @@
       bind__menu-playlist-button="isFavorited: menuSelectedChallenge.isFavorited; selectedChallenge: menuSelectedChallenge.id"
       bind__visible-raycastable="mainMenuActive && !playlist"
       material="opacity: 0"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: playlistmenuopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: PLAYLISTS" bind__visible="!isMenuOpening"></a-entity>
@@ -262,7 +262,7 @@
       mixin="bigMenuTopButton"
       bind__visible-raycastable="mainMenuActive && !search.query"
       material="opacity: 0"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: keyboardopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: SEARCH" bind__visible="!isMenuOpening"></a-entity>
@@ -294,7 +294,7 @@
       mixin="bigMenuTopButton"
       material="opacity: 0"
       bind__visible-raycastable="mainMenuActive"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: difficultyfiltermenuopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: DIFFICULTY" bind__visible="!isMenuOpening"></a-entity>
@@ -317,7 +317,7 @@
       mixin="bigMenuTopButton"
       bind__visible-raycastable="mainMenuActive && !genre"
       material="opacity: 0"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: genremenuopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: GENRES" bind__visible="!isMenuOpening"></a-entity>
@@ -347,7 +347,7 @@
 <!-- Options menu toggle. -->
 <a-entity id="optionsButtons" position="0 0.45 -1.96">
   <a-entity id="optionButton" mixin="bigMenuButton" bind__visible-raycastable="mainMenuActive" material="opacity: 0"
-    animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+    animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
     play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
     proxy-event="event: click; to: a-scene; as: optionsmenuopen">
     <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: THEMES"

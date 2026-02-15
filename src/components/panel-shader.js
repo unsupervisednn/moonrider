@@ -1,4 +1,6 @@
 import COLORS from '../constants/colors';
+import panelVertShader from './shaders/panel.vert.glsl';
+import panelFragShader from './shaders/panel.frag.glsl';
 
 AFRAME.registerShader('panelShader', {
   schema: {
@@ -14,13 +16,12 @@ AFRAME.registerShader('panelShader', {
     transparent: {default: true}
   },
 
-  vertexShader: require('./shaders/panel.vert.glsl'),
+  vertexShader: panelVertShader,
 
-  fragmentShader: require('./shaders/panel.frag.glsl'),
+  fragmentShader: panelFragShader,
 
   update: function (data) {
-    this.updateVariables(data, 'attribute');
-    this.updateVariables(data, 'uniform');
+    Object.getPrototypeOf(Object.getPrototypeOf(this)).update.call(this, data);
     this.el.sceneEl.systems.materials.registerPanel(this.material);
   }
 });

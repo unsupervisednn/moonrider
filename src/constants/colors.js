@@ -116,4 +116,4 @@ if (typeof localStorage === 'undefined') {
   COLORS.initial = COLORS.schemes[localStorage.getItem('colorScheme') || 'default'];
 }
 
-module.exports = COLORS;
+export default COLORS;

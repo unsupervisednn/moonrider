@@ -1,8 +1,6 @@
-const debounce = require('lodash.debounce');
-
-const convertBeatmap = require('../lib/convert-beatmap');
-
-const topSearchRaw = require('../lib/search.json');
+import debounce from 'lodash.debounce';
+import convertBeatmap from '../lib/convert-beatmap';
+import topSearchRaw from '../lib/search.json';
 const topSearch = topSearchRaw.map(convertBeatmap);
 
 const filters = [];

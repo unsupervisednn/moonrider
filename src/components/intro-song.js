@@ -41,7 +41,10 @@ AFRAME.registerComponent('intro-song', {
     const context = this.analyserEl.components.audioanalyser.context;
     const gainNode = this.analyserEl.components.audioanalyser.gainNode;
     gainNode.gain.setValueAtTime(0, context.currentTime);
-    this.audio.play();
+    const playPromise = this.audio.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(() => {});
+    }
     gainNode.gain.linearRampToValueAtTime(0.5, context.currentTime + 0.5);
   }
 });

@@ -1,3 +1,6 @@
+import cutfxVert from './shaders/cutfx.vert.glsl';
+import cutfxFrag from './shaders/cutfx.frag.glsl';
+
 AFRAME.registerShader('cutfxShader', {
   schema: {
     src: {type: 'map', is: 'uniform', default: '#cutfxImg'},
@@ -9,6 +12,6 @@ AFRAME.registerShader('cutfxShader', {
     depthTest: {default: false},
     depthWrite: {default: false}
   },
-  vertexShader: require('./shaders/cutfx.vert.glsl'),
-  fragmentShader: require('./shaders/cutfx.frag.glsl')
+  vertexShader: cutfxVert,
+  fragmentShader: cutfxFrag
 });

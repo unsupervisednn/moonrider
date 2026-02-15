@@ -1,6 +1,6 @@
-const firebase = require('firebase/app');
-const pr = require('profane-words');
-require('firebase/firestore');
+import firebase from 'firebase/app';
+import pr from 'profane-words';
+import 'firebase/firestore';
 
 const NUM_SCORES_DISPLAYED = 10;
 const ba = /(fuc)|(ass)|(nig)|(shit)|(retard)/gi;

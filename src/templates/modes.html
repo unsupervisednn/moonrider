@@ -10,8 +10,8 @@
 
 <a-mixin
   id="modeBackgroundHover"
-  animation__mouseenter="property: components.material.material.uniforms.borderWidth.value; from: 0.002; to: 0.01; startEvents: mouseenter; pauseEvents: mouseleave; easing: linear; dur: 150"
-  animation__mouseleave="property: components.material.material.uniforms.borderWidth.value; from: 0.01; to: 0.002; startEvents: mouseleave; pauseEvents: mouseenter; easing: linear; dur: 150"
+  animation__mouseenter="property: material.borderWidth; from: 0.002; to: 0.01; startEvents: mouseenter; pauseEvents: mouseleave; easing: linear; dur: 150"
+  animation__mouseleave="property: material.borderWidth; from: 0.01; to: 0.002; startEvents: mouseleave; pauseEvents: mouseenter; easing: linear; dur: 150"
   play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.3"
   play-sound__click="event: click; sound: #confirmSound; volume: 0.1"
 
@@ -19,10 +19,10 @@
 
 <a-mixin
   id="modeBackgroundSelect"
-  animation__select="property: components.material.material.uniforms.brightness.value; to: 0.5; startEvents: select; easing: easeOutQuad; dur: 200"
-  animation__deselect="property: components.material.material.uniforms.brightness.value; to: 0.1; startEvents: deselect; easing: easeOutQuad; dur: 200"
-  animation__select2="property: components.material.material.uniforms.borderWidth.value; to: 0.015; startEvents: select; easing: linear; dur: 200"
-  animation__deselect2="property: components.material.material.uniforms.borderWidth.value; to: 0.002; startEvents: deselect; easing: linear; dur: 200"></a-mixin>
+  animation__select="property: material.brightness; to: 0.5; startEvents: select; easing: easeOutQuad; dur: 200"
+  animation__deselect="property: material.brightness; to: 0.1; startEvents: deselect; easing: easeOutQuad; dur: 200"
+  animation__select2="property: material.borderWidth; to: 0.015; startEvents: select; easing: linear; dur: 200"
+  animation__deselect2="property: material.borderWidth; to: 0.002; startEvents: deselect; easing: linear; dur: 200"></a-mixin>
 
 {% macro mode (index, name, mode, image, description, forVR) %}
 {% set id = name + (forVR and 'vr' or '2d') %}

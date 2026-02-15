@@ -258,7 +258,7 @@
   obj-model="obj: #cutfxObj"
   material="shader: cutfxShader; progress: 1"
   render-order="menu"
-  animation="property: components.material.material.uniforms.progress.value; from: 0; to: 1; dur: 400; loop: false; easing: linear; startEvents: explode"></a-mixin>
+  animation="property: material.progress; from: 0; to: 1; dur: 400; loop: false; easing: linear; startEvents: explode"></a-mixin>
 
 <a-mixin
   id="blueBeatFX"
@@ -266,7 +266,7 @@
   obj-model="obj: #cutfxObj"
   material="shader: cutfxShader; progress: 1"
   render-order="menu"
-  animation="property: components.material.material.uniforms.progress.value; from: 0; to: 1; dur: 400; loop: false; easing: linear; startEvents: explode"></a-mixin>
+  animation="property: material.progress; from: 0; to: 1; dur: 400; loop: false; easing: linear; startEvents: explode"></a-mixin>
 
 <a-mixin
   id="mineBroken"
@@ -277,7 +277,7 @@
 <a-mixin
   id="mineFX"
   geometry="primitive: plane; width: 0.6; height: 0.6"
-  material="shader: flat; transparent: true; src: #minefxImg; color: #fff568; depthWrite: false"
+  material="shader: flat; transparent: true; src: #minefxImg; color: ; depthWrite: false"
   render-order="menu"
   animation="property: components.material.material.opacity; from:1; to:0; dur: 400; loop: false; easing: linear; startEvents: explode"></a-mixin>
 
@@ -287,7 +287,7 @@
   obj-model="obj: #punchfxObj"
   material="shader: cutfxShader; progress: 1"
   render-order="menu"
-  animation="property: components.material.material.uniforms.progress.value; from: 0; to: 1; dur: 600; loop: false; easing: linear; startEvents: explode"></a-mixin>
+  animation="property: material.progress; from: 0; to: 1; dur: 600; loop: false; easing: linear; startEvents: explode"></a-mixin>
 
 <a-mixin
   id="bluePunchFX"
@@ -295,7 +295,7 @@
   obj-model="obj: #punchfxObj"
   material="shader: cutfxShader; progress: 1"
   render-order="menu"
-  animation="property: components.material.material.uniforms.progress.value; from: 0; to: 1; dur: 600; loop: false; easing: linear; startEvents: explode"></a-mixin>
+  animation="property: material.progress; from: 0; to: 1; dur: 600; loop: false; easing: linear; startEvents: explode"></a-mixin>
 
 <a-mixin
   bind__material="color: colorTertiary"
@@ -303,12 +303,12 @@
   obj-model="obj: #punchfxObj"
   material="shader: cutfxShader; progress: 1"
   render-order="menu"
-  animation="property: components.material.material.uniforms.progress.value; from: 0; to: 1; dur: 600; loop: false; easing: linear; startEvents: explode"></a-mixin>
+  animation="property: material.progress; from: 0; to: 1; dur: 600; loop: false; easing: linear; startEvents: explode"></a-mixin>
 
 <a-mixin
   id="wall"
   material="shader: wallShader; transparent: true; side: double; opacity: 0"
-  animation__fadein="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; easing: easeInCubic; autoplay: false; dur: 1500"
+  animation__fadein="property: material.opacity; from: 0; to: 1; easing: easeInCubic; autoplay: false; dur: 1500"
   animation__scalein="property: object3D.position.y; from: -5; to: 0; easing: easeInOutElastic; autoplay: false; dur: 1500"
   render-order
   wall></a-mixin>
@@ -322,8 +322,8 @@
   id="bigMenuButton"
   geometry="primitive: plane; width: 1.15; height: 0.23"
   material="shader: panelShader; brightness: 0.5; borderWidth: 0.05; ratio: 4; borderRadius: 0.6"
-  animation__mouseenter1="property: components.material.material.uniforms.activePanel.value; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
-  animation__mouseleave1="property: components.material.material.uniforms.activePanel.value; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100"
+  animation__mouseenter1="property: material.activePanel; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
+  animation__mouseleave1="property: material.activePanel; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100"
   animation__mouseenter2="property: scale; from: 1 1 1; to: 1.04 1.04 1.04; startEvents: mouseenter; pauseEvents: mouseleave; dur: 80"
   animation__mouseleave2="property: scale; to: 1 1 1; from: 1.04 1.04 1.04; startEvents: mouseleave; pauseEvents: mouseenter; dur: 80"
   render-order="menubutton"></a-mixin>
@@ -506,11 +506,11 @@
   play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
   play-sound__click="event: click; sound: #confirmSound;  volume: 0.25"
   material="ratio: 3; opacity: 0"
-  animation="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 500; delay: 3000">
+  animation="property: material.opacity; from: 0; to: 1; dur: 500; delay: 3000">
   <a-entity
     id="startButtonLabel"
     mixin="font"
-    text="value: BEGIN; color: #f0f0f0; align: center; width: 1; wrapCount: 12; opacity: 0"
+    text="value: BEGIN; color: ; align: center; width: 1; wrapCount: 12; opacity: 0"
     position="0 -0.1 0.01"
     animation="property: components.text.material.uniforms.opacity.value; from: 0; to: 1; dur: 500; delay: 3500"
     ></a-entity>
@@ -546,9 +546,9 @@
     bind__menu-midsection="active: !!menuSelectedChallenge.id && (mainMenuActive || difficultyFilterMenuOpen) || difficultyFilterMenuOpen; selectedChallenge: menuSelectedChallenge.id"
     bind-toggle__raycastable="menuActive || genreMenuOpen || isSearching || difficultyFilterMenuOpen"
     geometry="primitive: plane; width: 3.4; height: 1.82" material="shader: panelShader; ratio: 1.86; opacity: 0"
-    animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
-    animation__midsectionshow="property: components.material.material.uniforms.midSection.value; from: 0; to: 1; dur: 160; startEvents: showdifficultysection; easing: easeOutCubic"
-    animation__midsectionhide="property: components.material.material.uniforms.midSection.value; from: 1: to: 0; dur: 160; startEvents: hidedifficultysection; easing: easeOutCubic"
+    animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+    animation__midsectionshow="property: material.midSection; from: 0; to: 1; dur: 160; startEvents: showdifficultysection; easing: easeOutCubic"
+    animation__midsectionhide="property: material.midSection; from: 1: to: 0; dur: 160; startEvents: hidedifficultysection; easing: easeOutCubic"
     render-order="menu" position="0 0 -0.005"></a-entity>
 
   <a-entity id="mainMenu" bind__visible="mainMenuActive && !isMenuOpening || isSearching">
@@ -582,7 +582,7 @@
   animation__mouseenter="property: components.slice9.material.opacity; from: 0; to: 0.3; startEvents: mouseenter; pauseEvents: mouseleave; dur: 150"
   animation__mouseleave="property: components.slice9.material.opacity; from: 0.3; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 150"
   mixin="slice" raycaster-target="width: 1; height: 0.32" render-order="menubutton"
-  slice9="width: 0.8; color: #08bfa2; height: 0.130; padding: 0.03; opacity: 0"></a-mixin>
+  slice9="width: 0.8; color: ; height: 0.130; padding: 0.03; opacity: 0"></a-mixin>
 
 <a-entity id="searchPrevPage" mixin="searchPageButton" bind__slice9="color: colorPrimary"
   bind__visible-raycastable="search.hasPrev && (mainMenuActive || isSearching)"
@@ -677,8 +677,8 @@
         proxy-event="event: click; to: a-scene; as: playbuttonclick"
         material="shader: panelShader; brightness: 0.7; transparent: true; midSection: 0; ratio: 2.8; borderRadius: 0.6; borderWidth: 0.08"
         render-order="menubutton"
-        animation__mouseenter1="property: components.material.material.uniforms.activePanel.value; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
-        animation__mouseleave1="property: components.material.material.uniforms.activePanel.value; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100"
+        animation__mouseenter1="property: material.activePanel; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
+        animation__mouseleave1="property: material.activePanel; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100"
         animation__mouseenter2="property: scale; from: 1 1 1; to: 1.1 1.1 1.1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 100"
         animation__mouseleave2="property: scale; to: 1 1 1; from: 1.1 1.1 1.1; startEvents: mouseleave; pauseEvents: mouseenter; dur: 100">
         <a-entity mixin="font" text="align: center; color: #FFF; wrapCount: 15; value: PLAY" position="0 -0.085 0.01">
@@ -963,123 +963,6 @@
 
     <a-entity id="colorOptions" position="-0.79 -0.175 0.00" layout="type: box; columns: 10; margin: 0.2" materials-color-menu>
       
-        <a-entity
-          class="colorOption"
-          data-color-name="Super Medium"
-          data-color-scheme="default"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #f971c3; color2: #6ff9ea; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Star Warrior"
-          data-color-scheme="blue"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #1e4482; color2: #c27727; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Galactic Royal"
-          data-color-scheme="purple"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #6A39B3; color2: #FAF239; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Space Joker"
-          data-color-scheme="green"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #779E37; color2: #6A39B3; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Solar Flare"
-          data-color-scheme="yellow"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #C2C04C; color2: #E03A3E; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Trail Blazer"
-          data-color-scheme="red"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #E03A3E; color2: #DADADA; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Mint Choco"
-          data-color-scheme="rgb"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #34eb89; color2: #34ebd8; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Cheetah SoL"
-          data-color-scheme="cheetah"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #c27727; color2: #635c54; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
-        <a-entity
-          class="colorOption"
-          data-color-name="Ash Nova"
-          data-color-scheme="black"
-          mixin="clickSoundUI hoverSoundUI"
-          animation__mouseenter="property: scale; to: 1.2 1.2 1.2; dur: 150; easing: easeInOutCubic; startEvents: mouseenter"
-          animation__mouseleave="property: scale; to: 1 1 1; dur: 125; easing: easeInOutCubic; startEvents: mouseleave"
-          geometry="primitive: plane; width: 0.15; height: 0.15"
-          material="shader: gradientShader; color1: #555; color2: #FFF; transparent: true"
-          render-order="menutext"
-          bind-toggle__raycastable="optionsMenuOpen">
-        </a-entity>
-      
     </a-entity>
 
     <a-entity
@@ -1140,7 +1023,7 @@
 <!-- Search. -->
 <a-entity id="keyboard"
   bind__super-keyboard="hand: activeHand === 'left' && '#leftHand' || '#rightHand'; show: isSearching"
-  super-keyboard="label: Search on beatsaver.com; inputColor: #fff; labelColor: #f0f0f0; width: 1.5; hand: #rightHand; imagePath: assets/img/keyboard; font: assets/fonts/Viga-Regular.json; align: center; model: superkeyboard; keyColor: #fff; injectToRaycasterObjects: false; filters: allupper; keyHoverColor: #fff"
+  super-keyboard="label: Search on beatsaver.com; inputColor: #fff; labelColor: ; width: 1.5; hand: #rightHand; imagePath: assets/img/keyboard; font: assets/fonts/Viga-Regular.json; align: center; model: superkeyboard; keyColor: #fff; injectToRaycasterObjects: false; filters: allupper; keyHoverColor: #fff"
   position="0.58 1.2 -1.95" keyboard-raycastable="condition: isSearching" search
   proxy-event__dismiss="event: superkeyboarddismiss; to: a-scene; as: keyboardclose"
   proxy-event__accept="event: superkeyboardinput; to: a-scene; as: keyboardclose" render-order="menubutton"
@@ -1170,7 +1053,7 @@
       bind__menu-playlist-button="isFavorited: menuSelectedChallenge.isFavorited; selectedChallenge: menuSelectedChallenge.id"
       bind__visible-raycastable="mainMenuActive && !playlist"
       material="opacity: 0"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: playlistmenuopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: PLAYLISTS" bind__visible="!isMenuOpening"></a-entity>
@@ -1203,7 +1086,7 @@
       mixin="bigMenuTopButton"
       bind__visible-raycastable="mainMenuActive && !search.query"
       material="opacity: 0"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: keyboardopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: SEARCH" bind__visible="!isMenuOpening"></a-entity>
@@ -1235,7 +1118,7 @@
       mixin="bigMenuTopButton"
       material="opacity: 0"
       bind__visible-raycastable="mainMenuActive"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: difficultyfiltermenuopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: DIFFICULTY" bind__visible="!isMenuOpening"></a-entity>
@@ -1258,7 +1141,7 @@
       mixin="bigMenuTopButton"
       bind__visible-raycastable="mainMenuActive && !genre"
       material="opacity: 0"
-      animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+      animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
       play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
       proxy-event="event: click; to: a-scene; as: genremenuopen">
       <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: GENRES" bind__visible="!isMenuOpening"></a-entity>
@@ -1288,7 +1171,7 @@
 <!-- Options menu toggle. -->
 <a-entity id="optionsButtons" position="0 0.45 -1.96">
   <a-entity id="optionButton" mixin="bigMenuButton" bind__visible-raycastable="mainMenuActive" material="opacity: 0"
-    animation__opacity="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
+    animation__opacity="property: material.opacity; from: 0; to: 1; dur: 1000; delay: 300; startEvents: startgame"
     play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.1"
     proxy-event="event: click; to: a-scene; as: optionsmenuopen">
     <a-entity mixin="bigMenuTopButtonFont" text="align: center; color: #FFF; wrapCount: 20; value: THEMES"
@@ -1307,8 +1190,8 @@
 
 <a-mixin
   id="modeBackgroundHover"
-  animation__mouseenter="property: components.material.material.uniforms.borderWidth.value; from: 0.002; to: 0.01; startEvents: mouseenter; pauseEvents: mouseleave; easing: linear; dur: 150"
-  animation__mouseleave="property: components.material.material.uniforms.borderWidth.value; from: 0.01; to: 0.002; startEvents: mouseleave; pauseEvents: mouseenter; easing: linear; dur: 150"
+  animation__mouseenter="property: material.borderWidth; from: 0.002; to: 0.01; startEvents: mouseenter; pauseEvents: mouseleave; easing: linear; dur: 150"
+  animation__mouseleave="property: material.borderWidth; from: 0.01; to: 0.002; startEvents: mouseleave; pauseEvents: mouseenter; easing: linear; dur: 150"
   play-sound__hover="event: mouseenter; sound: #hoverSound; volume: 0.3"
   play-sound__click="event: click; sound: #confirmSound; volume: 0.1"
 
@@ -1316,10 +1199,10 @@
 
 <a-mixin
   id="modeBackgroundSelect"
-  animation__select="property: components.material.material.uniforms.brightness.value; to: 0.5; startEvents: select; easing: easeOutQuad; dur: 200"
-  animation__deselect="property: components.material.material.uniforms.brightness.value; to: 0.1; startEvents: deselect; easing: easeOutQuad; dur: 200"
-  animation__select2="property: components.material.material.uniforms.borderWidth.value; to: 0.015; startEvents: select; easing: linear; dur: 200"
-  animation__deselect2="property: components.material.material.uniforms.borderWidth.value; to: 0.002; startEvents: deselect; easing: linear; dur: 200"></a-mixin>
+  animation__select="property: material.brightness; to: 0.5; startEvents: select; easing: easeOutQuad; dur: 200"
+  animation__deselect="property: material.brightness; to: 0.1; startEvents: deselect; easing: easeOutQuad; dur: 200"
+  animation__select2="property: material.borderWidth; to: 0.015; startEvents: select; easing: linear; dur: 200"
+  animation__deselect2="property: material.borderWidth; to: 0.002; startEvents: deselect; easing: linear; dur: 200"></a-mixin>
 
 
 
@@ -1585,7 +1468,7 @@ for better score.; width: 1.6; lineHeight: 47"
     id="victoryAccuracyRing"
     bind__material="color: colorPrimary"k
     bind__victory-accuracy-ring="accuracy: score.finalAccuracy"
-    animation="property: components.material.material.uniforms.progress.value; from: 0; easing: easeOutQuad; delay: 500; dur: 2500; autoplay: false"
+    animation="property: material.progress; from: 0; easing: easeOutQuad; delay: 500; dur: 2500; autoplay: false"
     geometry="primitive: plane; width: 0.7; height: 0.7"
     material="shader: ring; transparent: true; radiusInner: 0.8; blending: additive; depthWrite: false"
     position="0 0.18 0"
@@ -1657,7 +1540,7 @@ for better score.; width: 1.6; lineHeight: 47"
       mixin="gameMenuButton"
       bind-toggle__raycastable="isVictory"
       bind__material="opacity: isVictory && 0 || 0"
-      animation="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; startEvents: textcounterdone"
+      animation="property: material.opacity; from: 0; to: 1; startEvents: textcounterdone"
       position="-0.56 -0.79 0.05"
       proxy-event="event: click; to: a-scene; as: gamemenurestart">
       <a-entity
@@ -1675,7 +1558,7 @@ for better score.; width: 1.6; lineHeight: 47"
       mixin="gameMenuButton"
       bind-toggle__raycastable="isVictory"
       bind__material="opacity: isVictory && 0 || 0"
-      animation="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; startEvents: textcounterdone"
+      animation="property: material.opacity; from: 0; to: 1; startEvents: textcounterdone"
       position="0.56 -0.79 0.05"
       proxy-event="event: click; to: a-scene; as: gamemenuexit">
       <a-entity
@@ -1955,8 +1838,8 @@ Chat with us on moonrider.xyz/discord"
     <a-mixin
   id="gameMenuButton"
   mixin="bigMenuButton"
-  animation__mouseenter="property: components.material.material.uniforms.activePanel.value; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 70"
-  animation__mouseleave="property: components.material.material.uniforms.activePanel.value; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 70"
+  animation__mouseenter="property: material.activePanel; from: 0; to: 1; startEvents: mouseenter; pauseEvents: mouseleave; dur: 70"
+  animation__mouseleave="property: material.activePanel; from: 1; to: 0; startEvents: mouseleave; pauseEvents: mouseenter; dur: 70"
   geometry="height: 0.28"></a-mixin>
 
 <a-mixin
@@ -1968,7 +1851,7 @@ Chat with us on moonrider.xyz/discord"
 
 <!-- Titles. -->
 <a-entity id="inGameMenuTitles" position="0 2.2 -2.3">
-  <a-entity mixin="gameMenuButtonText" text="value: GAME OVER; color: #f01978; width: 3.5" bind__visible="isGameOver"></a-entity>
+  <a-entity mixin="gameMenuButtonText" text="value: GAME OVER; color: ; width: 3.5" bind__visible="isGameOver"></a-entity>
   <a-entity mixin="gameMenuButtonText" text="value: SONG CLEARED; color: #FFF; width: 3.5" bind__visible="isVictory" position="0 0.1 0"></a-entity>
   <a-entity mixin="gameMenuButtonText" bind__text="color: colorPrimary" text="value: PAUSED; width: 3.5" bind__visible="isPaused"></a-entity>
 </a-entity>
@@ -2189,7 +2072,7 @@ Chat with us on moonrider.xyz/discord"
                 bind__material="colorPrimary: colorPrimary; colorSecondary: colorSecondary; colorTertiary: colorTertiary"
                 geometry="primitive: sphere; radius: 0.1"
                 material="shader: handStar"
-                animation__pulse="property: components.material.material.uniforms.pulse.value; from: 2; to: 0; dur: 300; startEvents: plumepulse; easing: easeInOutQuad"
+                animation__pulse="property: material.pulse; from: 2; to: 0; dur: 300; startEvents: plumepulse; easing: easeInOutQuad"
                 animation__scale="property: scale; from: 2 2 2; to: 1 1 1; dur: 1200; startEvents: plumepulse; easing: easeInOutQuad"></a-entity>
           </a-entity>
         </a-entity>
@@ -2306,7 +2189,7 @@ Chat with us on moonrider.xyz/discord"
                 bind__material="colorPrimary: colorPrimary; colorSecondary: colorSecondary; colorTertiary: colorTertiary"
                 geometry="primitive: sphere; radius: 0.1"
                 material="shader: handStar"
-                animation__pulse="property: components.material.material.uniforms.pulse.value; from: 2; to: 0; dur: 300; startEvents: plumepulse; easing: easeInOutQuad"
+                animation__pulse="property: material.pulse; from: 2; to: 0; dur: 300; startEvents: plumepulse; easing: easeInOutQuad"
                 animation__scale="property: scale; from: 2 2 2; to: 1 1 1; dur: 1200; startEvents: plumepulse; easing: easeInOutQuad"></a-entity>
           </a-entity>
         </a-entity>

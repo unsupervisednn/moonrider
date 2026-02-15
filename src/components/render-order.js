@@ -1,4 +1,23 @@
+AFRAME.registerSystem('render-order', {
+  init: function () {
+    this.order = {};
+  },
+
+  setOrderMap: function (raw) {
+    const map = {};
+    const keys = (raw || '').split(',').map(s => s.trim()).filter(Boolean);
+
+    for (let i = 0; i < keys.length; i++) {
+      map[keys[i]] = i + 1;
+    }
+
+    this.order = map;
+    this.el.emit('render-order-map-updated');
+  }
+});
+
 AFRAME.registerComponent('render-order', {
+  multiple: true,
   schema: { default: '' },
 
   init: function () {
@@ -20,10 +39,13 @@ AFRAME.registerComponent('render-order', {
   },
 
   update: function () {
-    if (this.el.sceneEl === this.el) {
-      this.updateSceneOrderMap();
+    if (this.isSceneOrderConfig()) {
+      const renderer = this.el.renderer;
+      if (renderer) { renderer.sortObjects = true; }
+      this.system.setOrderMap(this.data);
       return;
     }
+
     this.apply();
   },
 
@@ -35,32 +57,27 @@ AFRAME.registerComponent('render-order', {
     this.apply();
   },
 
-  updateSceneOrderMap: function () {
-    const renderer = this.el.renderer;
-    if (renderer) { renderer.sortObjects = true; }
+  isSceneOrderConfig: function () {
+    return this.el.sceneEl === this.el && this.id === '';
+  },
 
-    const raw = this.data || '';
-    const map = {};
-    const keys = raw.split(',').map(s => s.trim()).filter(Boolean);
-    for (let i = 0; i < keys.length; i++) {
-      map[keys[i]] = i + 1;
-    }
+  getRenderOrderValue: function () {
+    const key = (this.data || '').trim();
+    if (!key) { return undefined; }
 
-    this.el.sceneEl.__renderOrderMap = map;
-    this.el.sceneEl.emit('render-order-map-updated');
+    const numericOrder = Number(key);
+    if (Number.isFinite(numericOrder)) { return numericOrder; }
+    return this.system.order[key];
   },
 
   apply: function () {
-    if (!this.el.sceneEl) { return; }
-    const key = (this.data || '').trim();
-    if (!key) { return; }
+    if (!this.el.object3D || this.isSceneOrderConfig()) { return; }
 
-    const map = this.el.sceneEl.__renderOrderMap || {};
-    const renderOrder = map[key];
+    const renderOrder = this.getRenderOrderValue();
     if (renderOrder === undefined) { return; }
 
     this.el.object3D.traverse(obj => {
-      if (obj.isObject3D) {
+      if (obj && obj.isObject3D) {
         obj.renderOrder = renderOrder;
       }
     });

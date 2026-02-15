@@ -1,4 +1,4 @@
-var SoundPool = require('../lib/soundpool');
+import SoundPool from '../lib/soundpool';
 
 AFRAME.registerSystem('play-sound', {
   init: function () {

@@ -1,4 +1,4 @@
-import utils from '../utils';
+import * as utils from '../utils';
 
 let skipDebug = AFRAME.utils.getUrlParameter('skip') || 0;
 skipDebug = parseInt(skipDebug, 10);

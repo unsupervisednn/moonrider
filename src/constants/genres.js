@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {name: 'Pop', row: 1, column: 1},
   {name: 'R&B', row: 1, column: 2},
   {name: 'Rap', row: 1, column: 3},

@@ -1,5 +1,65 @@
 html {
   background: #000;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+#app {
+  height: 100%;
+}
+
+html.a-fullscreen {
+  bottom: 0;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+html.a-fullscreen body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  width: 100%;
+}
+
+.a-canvas {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+html.a-fullscreen .a-canvas {
+  width: 100% !important;
+  height: 100% !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  position: fixed !important;
+}
+
+a-scene {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+a-assets,
+a-assets audio,
+a-assets img,
+a-assets video,
+a-assets a-asset-item {
+  display: none !important;
 }
 
 #vrButton {

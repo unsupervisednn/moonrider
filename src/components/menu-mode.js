@@ -1,4 +1,4 @@
-const COLORS = require('../constants/colors.js');
+import COLORS from '../constants/colors';
 
 const iconPositions = {
   classicvr: -0.6,

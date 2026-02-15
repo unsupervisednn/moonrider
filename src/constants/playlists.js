@@ -1,4 +1,4 @@
-module.exports = [
+export default [
   {name: 'favorites', author: 'You!', title: 'Your Saved Favorites'},
   {name: '3966', author: 'BeastSaber', title: 'Songs With Fantastic Flow Vol. 1'},
   {name: '3967', author: 'BeastSaber', title: 'Songs With Fantastic Flow Vol. 2'},

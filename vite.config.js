@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import { defineConfig, loadEnv } from 'vite';
-import { viteCommonjs } from '@originjs/vite-plugin-commonjs';
 
 function glslAsTextPlugin () {
   return {
@@ -29,6 +28,6 @@ export default defineConfig(({ mode }) => {
       'process.env.DEBUG_KEYBOARD': JSON.stringify(env.DEBUG_KEYBOARD || ''),
       'process.env.DEBUG_INSPECTOR': JSON.stringify(env.DEBUG_INSPECTOR || '')
     },
-    plugins: [viteCommonjs(), glslAsTextPlugin()]
+    plugins: [glslAsTextPlugin()]
   };
 });

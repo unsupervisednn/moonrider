@@ -1,4 +1,6 @@
 import COLORS from '../constants/colors';
+import supercurveFragShader from './shaders/supercurve.frag.glsl';
+import supercurveVertShader from './shaders/supercurve.vert.glsl';
 
 AFRAME.registerShader('supercurve', {
   schema: {
@@ -10,13 +12,12 @@ AFRAME.registerShader('supercurve', {
     transparent: {default: true}
   },
 
-  fragmentShader: require('./shaders/supercurve.frag.glsl'),
+  fragmentShader: supercurveFragShader,
 
-  vertexShader: require('./shaders/supercurve.vert.glsl'),
+  vertexShader: supercurveVertShader,
 
   update: function (data) {
-    this.updateVariables(data, 'attribute');
-    this.updateVariables(data, 'uniform');
+    Object.getPrototypeOf(Object.getPrototypeOf(this)).update.call(this, data);
     this.el.sceneEl.systems.materials.registerCurve(this.material);
   }
 });

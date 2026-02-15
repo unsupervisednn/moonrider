@@ -8,7 +8,7 @@
     id="victoryAccuracyRing"
     bind__material="color: colorPrimary"k
     bind__victory-accuracy-ring="accuracy: score.finalAccuracy"
-    animation="property: components.material.material.uniforms.progress.value; from: 0; easing: easeOutQuad; delay: 500; dur: 2500; autoplay: false"
+    animation="property: material.progress; from: 0; easing: easeOutQuad; delay: 500; dur: 2500; autoplay: false"
     geometry="primitive: plane; width: 0.7; height: 0.7"
     material="shader: ring; transparent: true; radiusInner: 0.8; blending: additive; depthWrite: false"
     position="0 0.18 0"
@@ -80,7 +80,7 @@
       mixin="gameMenuButton"
       bind-toggle__raycastable="isVictory"
       bind__material="opacity: isVictory && 0 || 0"
-      animation="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; startEvents: textcounterdone"
+      animation="property: material.opacity; from: 0; to: 1; startEvents: textcounterdone"
       position="-0.56 -0.79 0.05"
       proxy-event="event: click; to: a-scene; as: gamemenurestart">
       <a-entity
@@ -98,7 +98,7 @@
       mixin="gameMenuButton"
       bind-toggle__raycastable="isVictory"
       bind__material="opacity: isVictory && 0 || 0"
-      animation="property: components.material.material.uniforms.opacity.value; from: 0; to: 1; startEvents: textcounterdone"
+      animation="property: material.opacity; from: 0; to: 1; startEvents: textcounterdone"
       position="0.56 -0.79 0.05"
       proxy-event="event: click; to: a-scene; as: gamemenuexit">
       <a-entity

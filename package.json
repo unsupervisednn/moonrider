@@ -12,6 +12,7 @@
     "start": "npm run generate:scene && vite --host 0.0.0.0 --port 3000"
   },
   "dependencies": {
+    "aframe": "^1.7.1",
     "aframe-aabb-collider-component": "^3.2.2",
     "aframe-atlas-uvs-component": "^3.0.0",
     "aframe-audioanalyser-component": "^6.1.0",
@@ -25,18 +26,16 @@
     "aframe-slice9-component": "^1.0.0",
     "aframe-state-component": "6.7.0",
     "aframe-thumb-controls-component": "^2.0.3",
-    "aframe": "^1.7.1",
     "ansi-html": "0.0.7",
     "debug": "^4.4.3",
+    "fflate": "^0.8.2",
     "firebase": "^7.24.0",
     "ip": "1.1.5",
     "lodash.debounce": "^4.0.8",
     "profane-words": "^1.6.0",
-    "promise-polyfill": "^8.3.0",
-    "unzip-js": "^1.0.0"
+    "promise-polyfill": "^8.3.0"
   },
   "devDependencies": {
-    "@originjs/vite-plugin-commonjs": "^1.0.3",
     "cross-env": "4.0.0",
     "ghpages": "0.0.10",
     "nunjucks": "^3.2.4",

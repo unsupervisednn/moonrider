@@ -26,7 +26,13 @@ AFRAME.registerComponent('layout', {
 
   layout: function () {
     const children = Array.prototype.slice.call(this.el.children)
-      .filter(child => child.tagName && child.tagName.toLowerCase().startsWith('a-'));
+      .filter(child => child.tagName && child.tagName.toLowerCase().startsWith('a-'))
+      .filter(child => {
+        // bind-for pools entities; skip inactive ones so layout indices stay compact.
+        if (child.object3D && child.object3D.visible === false) { return false; }
+        const visibleAttr = child.getAttribute('visible');
+        return visibleAttr !== false;
+      });
 
     if (!children.length) { return; }
 
@@ -52,7 +58,7 @@ AFRAME.registerComponent('layout', {
       if (data.align === 'center') {
         const offsetX = (children.length - 1) * colStep / 2;
         for (const child of children) {
-          child.object3D.position.x -= offsetX;
+          this.offsetChildPosition(child, -offsetX, 0);
         }
       }
       return;
@@ -73,13 +79,30 @@ AFRAME.registerComponent('layout', {
       const offsetX = (usedCols - 1) * colStep / 2;
       const offsetY = (rows - 1) * rowStep / 2;
       for (const child of children) {
-        child.object3D.position.x -= offsetX;
-        child.object3D.position.y += offsetY;
+        this.offsetChildPosition(child, -offsetX, offsetY);
       }
     }
   },
 
   setChildPosition: function (el, x, y) {
-    el.object3D.position.set(x, y, el.object3D.position.z);
+    if (el.object3D && el.object3D.position) {
+      el.object3D.position.set(x, y, el.object3D.position.z);
+      return;
+    }
+
+    const currentPosition = el.getAttribute('position') || {x: 0, y: 0, z: 0};
+    el.setAttribute('position', `${x} ${y} ${currentPosition.z || 0}`);
+  },
+
+  offsetChildPosition: function (el, x, y) {
+    if (el.object3D && el.object3D.position) {
+      el.object3D.position.x += x;
+      el.object3D.position.y += y;
+      return;
+    }
+
+    const currentPosition = el.getAttribute('position') || {x: 0, y: 0, z: 0};
+    el.setAttribute('position',
+      `${(currentPosition.x || 0) + x} ${(currentPosition.y || 0) + y} ${currentPosition.z || 0}`);
   }
 });

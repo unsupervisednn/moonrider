@@ -1,5 +1,5 @@
 /* global Audio */
-module.exports = function SoundPool (src, volume) {
+export default function SoundPool (src, volume) {
   var currSound = 0;
   var pool = [];
   var sound;
@@ -24,4 +24,4 @@ module.exports = function SoundPool (src, volume) {
       currSound = (currSound + 1) % pool.length;
     }
   };
-};
+}
