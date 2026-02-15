@@ -65,7 +65,7 @@
   render-order="stage, aurora, sideglow, tunnel, curve, curveshadow, beatShadow, score, beats, menu, menuitem, menubutton, menutext, menugenre, cursor, particles, weapon, victory, stepback"
   stats-param
   tunnels
-  vr-mode-ui="enterVRButton: #vrButton">
+  xr-mode-ui="enterVRButton: #vrButton">
 
   <a-assets timeout="3000">
     <require path="assets.html"></require>
@@ -175,6 +175,7 @@
           haptics__plume="events: plumepulse; dur: 35; force: 0.1"
           headfist="hand: {{ hand }}"
           raycaster="objects: [raycastable]; far: 5; showLine: false"
+          menu-raycaster-align
           raycaster__game="objects: [raycastable-game]; far: 1; interval: {{ hand == 'right' and '70' or '71' }}; direction: 0 1 -1"
           weapon="hand: {{ hand }}"
           weapon-particles="hand: {{ hand }}"
@@ -182,7 +183,9 @@
           thumb-controls-debug="enabled: false; hand: {{ hand }}; controllerType: vive-controls"
           render-order="weapon"
           trail="color: {{ hand === 'right' and 'secondary' or 'primary' }}; hand: {{ hand }}">
-          <a-entity bind__position="has3DOFVR && '0 0 -0.5' || '0 0 0'">
+          <a-entity
+            bind__position="has3DOFVR && '0 0 -0.5' || '0 0 0'"
+            bind__rotation="(controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '-43 0 0' || '0 0 0'">
             <a-entity
               id="{{ hand }}Laser"
               class="laser"
@@ -195,7 +198,7 @@
 
           <!-- Blade. -->
           <a-entity bind__position="has3DOFVR && '0 0 -0.5' || '0 0 0'"
-                    bind__rotation="controllerType.indexOf('oculus') !== -1 && '135 0 0' || '90 0 0'">
+                    bind__rotation="!isPlaying && (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '92 0 0' || (controllerType.indexOf('oculus') !== -1 || controllerType.indexOf('meta-touch') !== -1) && '135 0 0' || '90 0 0'">
             <a-entity
               class="bladeContainer"
               bind__visible="isPlaying && gameMode === 'classic'"

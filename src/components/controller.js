@@ -67,6 +67,27 @@ AFRAME.registerComponent('controller', {
       }
     },
 
+    'meta-touch-controls': {
+      cursor: {
+        downEvents: [
+          'triggerdown',
+          'gripdown',
+          'abuttondown',
+          'bbuttondown',
+          'xbuttondown',
+          'ybuttondown'
+        ],
+        upEvents: [
+          'triggerup',
+          'gripup',
+          'abuttonup',
+          'bbuttonup',
+          'xbuttonup',
+          'ybuttonup'
+        ]
+      }
+    },
+
     'vive-controls': {
       cursor: {
         downEvents: ['trackpaddown', 'triggerdown', 'gripdown'],

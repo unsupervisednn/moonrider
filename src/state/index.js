@@ -242,6 +242,7 @@ AFRAME.registerState({
       state.has6DOFVR = [
         'oculus-quest-controls',
         'oculus-touch-controls',
+        'meta-touch-controls',
         'vive-controls',
         'windows-motion-controls',
         'generic-tracked-controller-controls'

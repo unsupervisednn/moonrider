@@ -17,6 +17,9 @@ export default defineConfig(({ mode }) => {
 
   return {
     base: './',
+    server: {
+      allowedHosts: (process.env.HOSTS ?? '').split(',').map(host => host.trim()),
+    },
     build: {
       outDir: 'build',
       emptyOutDir: true
