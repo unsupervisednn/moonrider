@@ -297,122 +297,129 @@ async function runMigrations (request, env) {
   }
 
   try {
-    await env.DB.exec(`
-      CREATE TABLE IF NOT EXISTS "user" (
-        "id" TEXT PRIMARY KEY NOT NULL,
-        "name" TEXT NOT NULL,
-        "email" TEXT NOT NULL,
-        "emailVerified" INTEGER NOT NULL DEFAULT 0,
-        "image" TEXT,
-        "createdAt" INTEGER NOT NULL,
-        "updatedAt" INTEGER NOT NULL
-      );
-    `);
+    const statements = [
+      {
+        label: 'create user table',
+        sql: `CREATE TABLE IF NOT EXISTS "user" (
+          "id" TEXT PRIMARY KEY NOT NULL,
+          "name" TEXT NOT NULL,
+          "email" TEXT NOT NULL,
+          "emailVerified" INTEGER NOT NULL DEFAULT 0,
+          "image" TEXT,
+          "createdAt" INTEGER NOT NULL,
+          "updatedAt" INTEGER NOT NULL
+        )`
+      },
+      {
+        label: 'create user email index',
+        sql: `CREATE UNIQUE INDEX IF NOT EXISTS "idx_user_email"
+          ON "user" ("email")`
+      },
+      {
+        label: 'create session table',
+        sql: `CREATE TABLE IF NOT EXISTS "session" (
+          "id" TEXT PRIMARY KEY NOT NULL,
+          "expiresAt" INTEGER NOT NULL,
+          "token" TEXT NOT NULL,
+          "createdAt" INTEGER NOT NULL,
+          "updatedAt" INTEGER NOT NULL,
+          "ipAddress" TEXT,
+          "userAgent" TEXT,
+          "userId" TEXT NOT NULL,
+          FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE
+        )`
+      },
+      {
+        label: 'create session token index',
+        sql: `CREATE UNIQUE INDEX IF NOT EXISTS "idx_session_token"
+          ON "session" ("token")`
+      },
+      {
+        label: 'create session user id index',
+        sql: `CREATE INDEX IF NOT EXISTS "idx_session_user_id"
+          ON "session" ("userId")`
+      },
+      {
+        label: 'create account table',
+        sql: `CREATE TABLE IF NOT EXISTS "account" (
+          "id" TEXT PRIMARY KEY NOT NULL,
+          "accountId" TEXT NOT NULL,
+          "providerId" TEXT NOT NULL,
+          "userId" TEXT NOT NULL,
+          "accessToken" TEXT,
+          "refreshToken" TEXT,
+          "idToken" TEXT,
+          "accessTokenExpiresAt" INTEGER,
+          "refreshTokenExpiresAt" INTEGER,
+          "scope" TEXT,
+          "password" TEXT,
+          "createdAt" INTEGER NOT NULL,
+          "updatedAt" INTEGER NOT NULL,
+          FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE
+        )`
+      },
+      {
+        label: 'create account user id index',
+        sql: `CREATE INDEX IF NOT EXISTS "idx_account_user_id"
+          ON "account" ("userId")`
+      },
+      {
+        label: 'create account provider/account index',
+        sql: `CREATE UNIQUE INDEX IF NOT EXISTS "idx_account_provider_account"
+          ON "account" ("providerId", "accountId")`
+      },
+      {
+        label: 'create verification table',
+        sql: `CREATE TABLE IF NOT EXISTS "verification" (
+          "id" TEXT PRIMARY KEY NOT NULL,
+          "identifier" TEXT NOT NULL,
+          "value" TEXT NOT NULL,
+          "expiresAt" INTEGER NOT NULL,
+          "createdAt" INTEGER NOT NULL,
+          "updatedAt" INTEGER NOT NULL
+        )`
+      },
+      {
+        label: 'create verification identifier index',
+        sql: `CREATE INDEX IF NOT EXISTS "idx_verification_identifier"
+          ON "verification" ("identifier")`
+      },
+      {
+        label: 'create favorites table',
+        sql: `CREATE TABLE IF NOT EXISTS favorites (
+          user_id TEXT NOT NULL,
+          challenge_id TEXT NOT NULL,
+          challenge_json TEXT NOT NULL,
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          PRIMARY KEY (user_id, challenge_id)
+        )`
+      },
+      {
+        label: 'create high_scores table',
+        sql: `CREATE TABLE IF NOT EXISTS high_scores (
+          id TEXT PRIMARY KEY,
+          user_id TEXT NOT NULL,
+          challenge_id TEXT NOT NULL,
+          difficulty TEXT NOT NULL,
+          beatmap_characteristic TEXT NOT NULL,
+          game_mode TEXT NOT NULL,
+          score INTEGER NOT NULL,
+          accuracy REAL,
+          username TEXT NOT NULL,
+          created_at TEXT NOT NULL
+        )`
+      },
+      {
+        label: 'create high_scores lookup index',
+        sql: `CREATE INDEX IF NOT EXISTS idx_high_scores_lookup
+          ON high_scores (challenge_id, difficulty, beatmap_characteristic, game_mode, score DESC, created_at ASC)`
+      }
+    ];
 
-    await env.DB.exec(`
-      CREATE UNIQUE INDEX IF NOT EXISTS "idx_user_email"
-      ON "user" ("email");
-    `);
-
-    await env.DB.exec(`
-      CREATE TABLE IF NOT EXISTS "session" (
-        "id" TEXT PRIMARY KEY NOT NULL,
-        "expiresAt" INTEGER NOT NULL,
-        "token" TEXT NOT NULL,
-        "createdAt" INTEGER NOT NULL,
-        "updatedAt" INTEGER NOT NULL,
-        "ipAddress" TEXT,
-        "userAgent" TEXT,
-        "userId" TEXT NOT NULL,
-        FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE
-      );
-    `);
-
-    await env.DB.exec(`
-      CREATE UNIQUE INDEX IF NOT EXISTS "idx_session_token"
-      ON "session" ("token");
-    `);
-
-    await env.DB.exec(`
-      CREATE INDEX IF NOT EXISTS "idx_session_user_id"
-      ON "session" ("userId");
-    `);
-
-    await env.DB.exec(`
-      CREATE TABLE IF NOT EXISTS "account" (
-        "id" TEXT PRIMARY KEY NOT NULL,
-        "accountId" TEXT NOT NULL,
-        "providerId" TEXT NOT NULL,
-        "userId" TEXT NOT NULL,
-        "accessToken" TEXT,
-        "refreshToken" TEXT,
-        "idToken" TEXT,
-        "accessTokenExpiresAt" INTEGER,
-        "refreshTokenExpiresAt" INTEGER,
-        "scope" TEXT,
-        "password" TEXT,
-        "createdAt" INTEGER NOT NULL,
-        "updatedAt" INTEGER NOT NULL,
-        FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE
-      );
-    `);
-
-    await env.DB.exec(`
-      CREATE INDEX IF NOT EXISTS "idx_account_user_id"
-      ON "account" ("userId");
-    `);
-
-    await env.DB.exec(`
-      CREATE UNIQUE INDEX IF NOT EXISTS "idx_account_provider_account"
-      ON "account" ("providerId", "accountId");
-    `);
-
-    await env.DB.exec(`
-      CREATE TABLE IF NOT EXISTS "verification" (
-        "id" TEXT PRIMARY KEY NOT NULL,
-        "identifier" TEXT NOT NULL,
-        "value" TEXT NOT NULL,
-        "expiresAt" INTEGER NOT NULL,
-        "createdAt" INTEGER NOT NULL,
-        "updatedAt" INTEGER NOT NULL
-      );
-    `);
-
-    await env.DB.exec(`
-      CREATE INDEX IF NOT EXISTS "idx_verification_identifier"
-      ON "verification" ("identifier");
-    `);
-
-    await env.DB.exec(`
-      CREATE TABLE IF NOT EXISTS favorites (
-        user_id TEXT NOT NULL,
-        challenge_id TEXT NOT NULL,
-        challenge_json TEXT NOT NULL,
-        created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL,
-        PRIMARY KEY (user_id, challenge_id)
-      );
-    `);
-
-    await env.DB.exec(`
-      CREATE TABLE IF NOT EXISTS high_scores (
-        id TEXT PRIMARY KEY,
-        user_id TEXT NOT NULL,
-        challenge_id TEXT NOT NULL,
-        difficulty TEXT NOT NULL,
-        beatmap_characteristic TEXT NOT NULL,
-        game_mode TEXT NOT NULL,
-        score INTEGER NOT NULL,
-        accuracy REAL,
-        username TEXT NOT NULL,
-        created_at TEXT NOT NULL
-      );
-    `);
-
-    await env.DB.exec(`
-      CREATE INDEX IF NOT EXISTS idx_high_scores_lookup
-      ON high_scores (challenge_id, difficulty, beatmap_characteristic, game_mode, score DESC, created_at ASC);
-    `);
+    for (const statement of statements) {
+      await runMigrationStatement(env, statement.label, statement.sql);
+    }
 
     return json({ ok: true });
   } catch (error) {
@@ -491,4 +498,12 @@ async function getAuthTablesError (pathname, env) {
   }
 
   return json({ error: `Missing auth tables: ${missing.join(', ')}. Run POST /api/admin/migrate first.` }, 503);
+}
+
+async function runMigrationStatement (env, label, sql) {
+  try {
+    await env.DB.prepare(sql).run();
+  } catch (error) {
+    throw new Error(`${label}: ${error?.message || 'Unknown SQL error'}`);
+  }
 }
