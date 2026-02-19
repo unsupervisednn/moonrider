@@ -83,7 +83,7 @@ pnpm run start:worker
 
 ## GitHub Actions Deploy
 
-This repo includes `.github/workflows/deploy-worker.yml` to deploy on push to `main`.
+This repo includes `.github/workflows/deploy-worker.yml` to deploy on push to `master` or `main`.
 
 Add these repository secrets in GitHub:
 
