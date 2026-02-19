@@ -12,13 +12,12 @@
   },
   "d1_databases": [
     {
-      "binding": "moonrider",
+      "binding": "DB",
       "database_name": "moonrider",
       "database_id": "6062d1b8-8f00-468f-9868-324479e98c78"
     }
   ],
   "vars": {
-    "BETTER_AUTH_URL": "http://localhost:8787",
-    "BETTER_AUTH_TRUSTED_ORIGINS": "http://localhost:3000"
+    "BETTER_AUTH_TRUSTED_ORIGINS": "http://localhost:3000,https://mr.uos.li"
   }
 }
