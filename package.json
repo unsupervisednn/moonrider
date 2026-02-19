@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "packageManager": "pnpm@10.18.3",
   "scripts": {
-    "build": "npm run generate:scene && vite build",
-    "deploy": "npm run predeploy && ghpages git@github.com:supermedium/moonrider.git -p .ghpages && rm -rf .ghpages",
+    "build": "pnpm run generate:scene && vite build",
+    "deploy": "pnpm run deploy:cf:pages",
+    "deploy:cf:pages": "pnpm run build && pnpm dlx wrangler@latest pages deploy build --project-name moonrider",
+    "deploy:cf:workers": "pnpm dlx wrangler@latest deploy",
     "generate:scene": "node scripts/generate-scene-html.mjs",
     "lint": "semistandard -v | snazzy",
     "lint:fix": "semistandard --fix",
-    "predeploy": "npm run build && shx mkdir -p .ghpages && cp -r build/* assets vendor CNAME .ghpages",
-    "start": "npm run generate:scene && vite --host 0.0.0.0 --port 3000"
+    "start": "pnpm run generate:scene && vite --host 0.0.0.0 --port 3000"
   },
   "dependencies": {
     "aframe": "^1.7.1",
@@ -37,10 +38,8 @@
   },
   "devDependencies": {
     "cross-env": "4.0.0",
-    "ghpages": "0.0.10",
     "nunjucks": "^3.2.4",
     "semistandard": "10.0.0",
-    "shx": "^0.2.2",
     "snazzy": "7.0.0",
     "superagent": "^10.2.2",
     "vite": "^7.3.1"
@@ -55,7 +54,7 @@
     ]
   },
   "engines": {
-    "node": ">=24.10.0",
+    "node": ">=22.16.0",
     "npm": ">=11.6.0"
   }
 }

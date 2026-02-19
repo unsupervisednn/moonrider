@@ -14,11 +14,12 @@ function glslAsTextPlugin () {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
+  const hosts = (process.env.HOSTS ?? '').split(',').map(host => host.trim()).filter(Boolean);
 
   return {
     base: './',
     server: {
-      allowedHosts: (process.env.HOSTS ?? '').split(',').map(host => host.trim()),
+      allowedHosts: hosts,
     },
     build: {
       outDir: 'build',

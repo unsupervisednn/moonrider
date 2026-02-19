@@ -1,0 +1,10 @@
+{
+  "name": "moonrider",
+  "compatibility_date": "2026-02-19",
+  "build": {
+    "command": "pnpm run build"
+  },
+  "assets": {
+    "directory": "build"
+  }
+}
