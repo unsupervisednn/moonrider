@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 import { defineConfig, loadEnv } from 'vite';
 
 function glslAsTextPlugin () {
@@ -8,6 +9,23 @@ function glslAsTextPlugin () {
       if (!id.endsWith('.glsl')) { return null; }
       const shader = fs.readFileSync(id, 'utf8');
       return `export default ${JSON.stringify(shader)};`;
+    }
+  };
+}
+
+function copyStaticAssetsPlugin () {
+  let outDir = 'build';
+
+  return {
+    name: 'moonrider-copy-static-assets',
+    apply: 'build',
+    configResolved (config) {
+      outDir = config.build.outDir;
+    },
+    closeBundle () {
+      const sourceDir = path.resolve(process.cwd(), 'assets');
+      const destinationDir = path.resolve(process.cwd(), outDir, 'assets');
+      fs.cpSync(sourceDir, destinationDir, { recursive: true, force: true });
     }
   };
 }
@@ -32,6 +50,6 @@ export default defineConfig(({ mode }) => {
       'process.env.DEBUG_KEYBOARD': JSON.stringify(env.DEBUG_KEYBOARD || ''),
       'process.env.DEBUG_INSPECTOR': JSON.stringify(env.DEBUG_INSPECTOR || '')
     },
-    plugins: [glslAsTextPlugin()]
+    plugins: [glslAsTextPlugin(), copyStaticAssetsPlugin()]
   };
 });
