@@ -21,7 +21,7 @@ async function initialize () {
     session = await getCurrentSession();
   } catch (error) {
     console.error('[auth] failed to load session', error);
-    renderLogin(app, 'Unable to reach auth service. Check Worker deployment and try again.');
+    renderLogin(app, error?.message || 'Unable to reach auth service. Check Worker deployment and try again.');
     return;
   }
 
