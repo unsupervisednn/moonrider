@@ -19,5 +19,11 @@
   ],
   "vars": {
     "BETTER_AUTH_TRUSTED_ORIGINS": "http://localhost:3000,https://mr.uos.li"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true
+    }
   }
 }

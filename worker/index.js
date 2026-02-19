@@ -1,5 +1,7 @@
 import { betterAuth } from 'better-auth';
-import { getMigrations } from 'better-auth/db';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { drizzle } from 'drizzle-orm/d1';
+import { authSchema } from './auth-schema';
 
 const MAX_LEADERBOARD_ROWS = 10;
 
@@ -87,7 +89,10 @@ function createAuthConfig (env, request) {
   const config = {
     baseURL: env.BETTER_AUTH_URL || origin,
     secret: env.BETTER_AUTH_SECRET,
-    database: env.DB,
+    database: drizzleAdapter(drizzle(env.DB, { schema: authSchema }), {
+      provider: 'sqlite',
+      schema: authSchema
+    }),
     trustedOrigins
   };
 
@@ -276,12 +281,91 @@ async function runMigrations (request, env) {
   }
 
   try {
-    const migrations = getMigrations(createAuthConfig(env, request));
-    for (const migration of migrations) {
-      const sql = migration.sql || migration.up;
-      if (!sql) { continue; }
-      await env.DB.exec(sql);
-    }
+    await env.DB.exec(`
+      CREATE TABLE IF NOT EXISTS "user" (
+        "id" TEXT PRIMARY KEY NOT NULL,
+        "name" TEXT NOT NULL,
+        "email" TEXT NOT NULL,
+        "emailVerified" INTEGER NOT NULL DEFAULT 0,
+        "image" TEXT,
+        "createdAt" INTEGER NOT NULL,
+        "updatedAt" INTEGER NOT NULL
+      );
+    `);
+
+    await env.DB.exec(`
+      CREATE UNIQUE INDEX IF NOT EXISTS "idx_user_email"
+      ON "user" ("email");
+    `);
+
+    await env.DB.exec(`
+      CREATE TABLE IF NOT EXISTS "session" (
+        "id" TEXT PRIMARY KEY NOT NULL,
+        "expiresAt" INTEGER NOT NULL,
+        "token" TEXT NOT NULL,
+        "createdAt" INTEGER NOT NULL,
+        "updatedAt" INTEGER NOT NULL,
+        "ipAddress" TEXT,
+        "userAgent" TEXT,
+        "userId" TEXT NOT NULL,
+        FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE
+      );
+    `);
+
+    await env.DB.exec(`
+      CREATE UNIQUE INDEX IF NOT EXISTS "idx_session_token"
+      ON "session" ("token");
+    `);
+
+    await env.DB.exec(`
+      CREATE INDEX IF NOT EXISTS "idx_session_user_id"
+      ON "session" ("userId");
+    `);
+
+    await env.DB.exec(`
+      CREATE TABLE IF NOT EXISTS "account" (
+        "id" TEXT PRIMARY KEY NOT NULL,
+        "accountId" TEXT NOT NULL,
+        "providerId" TEXT NOT NULL,
+        "userId" TEXT NOT NULL,
+        "accessToken" TEXT,
+        "refreshToken" TEXT,
+        "idToken" TEXT,
+        "accessTokenExpiresAt" INTEGER,
+        "refreshTokenExpiresAt" INTEGER,
+        "scope" TEXT,
+        "password" TEXT,
+        "createdAt" INTEGER NOT NULL,
+        "updatedAt" INTEGER NOT NULL,
+        FOREIGN KEY ("userId") REFERENCES "user" ("id") ON DELETE CASCADE
+      );
+    `);
+
+    await env.DB.exec(`
+      CREATE INDEX IF NOT EXISTS "idx_account_user_id"
+      ON "account" ("userId");
+    `);
+
+    await env.DB.exec(`
+      CREATE UNIQUE INDEX IF NOT EXISTS "idx_account_provider_account"
+      ON "account" ("providerId", "accountId");
+    `);
+
+    await env.DB.exec(`
+      CREATE TABLE IF NOT EXISTS "verification" (
+        "id" TEXT PRIMARY KEY NOT NULL,
+        "identifier" TEXT NOT NULL,
+        "value" TEXT NOT NULL,
+        "expiresAt" INTEGER NOT NULL,
+        "createdAt" INTEGER NOT NULL,
+        "updatedAt" INTEGER NOT NULL
+      );
+    `);
+
+    await env.DB.exec(`
+      CREATE INDEX IF NOT EXISTS "idx_verification_identifier"
+      ON "verification" ("identifier");
+    `);
 
     await env.DB.exec(`
       CREATE TABLE IF NOT EXISTS favorites (
@@ -314,7 +398,7 @@ async function runMigrations (request, env) {
       ON high_scores (challenge_id, difficulty, beatmap_characteristic, game_mode, score DESC, created_at ASC);
     `);
 
-    return json({ ok: true, migrationsApplied: migrations.length });
+    return json({ ok: true });
   } catch (error) {
     console.error('[migrations]', error);
     return json({ error: `Migration failed: ${error?.message || 'Unknown error'}` }, 500);
