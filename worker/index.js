@@ -14,13 +14,29 @@ export default {
       if (pathname === '/api/auth' || pathname.startsWith('/api/auth/')) {
         const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
         if (configError) { return configError; }
+
+        const socialConfigError = getSocialProviderConfigError(pathname, env);
+        if (socialConfigError) { return socialConfigError; }
+
+        const authTablesError = await getAuthTablesError(pathname, env);
+        if (authTablesError) { return authTablesError; }
+
         const auth = createAuth(env, request);
-        return auth.handler(request);
+        try {
+          return await auth.handler(request);
+        } catch (error) {
+          console.error('[auth]', error);
+          return json({ error: error?.message || 'Auth handler failed' }, 500);
+        }
       }
 
       if (pathname === '/api/session' && request.method === 'GET') {
         const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
         if (configError) { return configError; }
+
+        const authTablesError = await getAuthTablesError(pathname, env);
+        if (authTablesError) { return authTablesError; }
+
         const auth = createAuth(env, request);
         const session = await auth.api.getSession({ headers: request.headers });
         return json({ session: session || null });
@@ -70,7 +86,7 @@ export default {
       return new Response('Not found', { status: 404 });
     } catch (error) {
       console.error('[worker]', error);
-      return json({ error: 'Internal server error' }, 500);
+      return json({ error: error?.message || 'Internal server error' }, 500);
     }
   }
 };
@@ -432,4 +448,47 @@ function getMissingConfigError (env, keys) {
   const missing = keys.filter(key => !env[key]);
   if (!missing.length) { return null; }
   return json({ error: `Missing Worker config: ${missing.join(', ')}` }, 503);
+}
+
+function getSocialProviderConfigError (pathname, env) {
+  if (!pathname.startsWith('/api/auth/sign-in/social')) {
+    return null;
+  }
+
+  const missing = [];
+  if (!env.DISCORD_CLIENT_ID) { missing.push('DISCORD_CLIENT_ID'); }
+  if (!env.DISCORD_CLIENT_SECRET) { missing.push('DISCORD_CLIENT_SECRET'); }
+
+  if (!missing.length) { return null; }
+  return json({ error: `Discord auth is not configured in Worker secrets/vars: ${missing.join(', ')}` }, 503);
+}
+
+async function getAuthTablesError (pathname, env) {
+  const requiresAuthTables =
+    pathname === '/api/session' ||
+    pathname.startsWith('/api/auth/sign-in/') ||
+    pathname.startsWith('/api/auth/callback/');
+
+  if (!requiresAuthTables) {
+    return null;
+  }
+
+  const expectedTables = ['user', 'session', 'account', 'verification'];
+  const placeholders = expectedTables.map(() => '?').join(', ');
+  const result = await env.DB.prepare(
+    `SELECT name
+     FROM sqlite_master
+     WHERE type = 'table'
+       AND name IN (${placeholders})`
+  )
+    .bind(...expectedTables)
+    .all();
+
+  const present = new Set((result.results || []).map(row => row.name));
+  const missing = expectedTables.filter(table => !present.has(table));
+  if (!missing.length) {
+    return null;
+  }
+
+  return json({ error: `Missing auth tables: ${missing.join(', ')}. Run POST /api/admin/migrate first.` }, 503);
 }
