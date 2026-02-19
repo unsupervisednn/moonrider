@@ -7,20 +7,31 @@ export const authClient = createAuthClient({
 });
 
 export async function getCurrentSession () {
-  const result = await authClient.getSession();
-  if (result.error) {
-    throw new Error(result.error.message || 'Failed to fetch auth session');
+  const response = await fetch('/api/session', {
+    credentials: 'include',
+    headers: {
+      Accept: 'application/json'
+    }
+  });
+
+  let body = null;
+  try {
+    body = await response.json();
+  } catch (error) {}
+
+  if (!response.ok) {
+    throw new Error(body?.error || `Failed to fetch auth session (${response.status})`);
   }
 
-  if (!result.data) {
+  if (!body || !body.session) {
     return null;
   }
 
-  if (result.data.user && result.data.session) {
-    return result.data;
+  if (body.session.user && body.session.session) {
+    return body.session;
   }
 
-  return { user: result.data.user || null, session: result.data.session || null };
+  return { user: body.session.user || null, session: body.session.session || null };
 }
 
 export async function signInWithDiscord () {

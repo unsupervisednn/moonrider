@@ -10,38 +10,54 @@ export default {
       const { pathname } = url;
 
       if (pathname === '/api/auth' || pathname.startsWith('/api/auth/')) {
+        const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
+        if (configError) { return configError; }
         const auth = createAuth(env, request);
         return auth.handler(request);
       }
 
       if (pathname === '/api/session' && request.method === 'GET') {
+        const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
+        if (configError) { return configError; }
         const auth = createAuth(env, request);
         const session = await auth.api.getSession({ headers: request.headers });
         return json({ session: session || null });
       }
 
       if (pathname === '/api/favorites' && request.method === 'GET') {
+        const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
+        if (configError) { return configError; }
         return getFavorites(request, env);
       }
 
       if (pathname === '/api/favorites' && request.method === 'POST') {
+        const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
+        if (configError) { return configError; }
         return addFavorite(request, env);
       }
 
       if (pathname.startsWith('/api/favorites/') && request.method === 'DELETE') {
+        const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
+        if (configError) { return configError; }
         const challengeId = decodeURIComponent(pathname.replace('/api/favorites/', ''));
         return removeFavorite(request, env, challengeId);
       }
 
       if (pathname === '/api/high-scores' && request.method === 'GET') {
+        const configError = getMissingConfigError(env, ['DB']);
+        if (configError) { return configError; }
         return getHighScores(url, env);
       }
 
       if (pathname === '/api/high-scores' && request.method === 'POST') {
+        const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB']);
+        if (configError) { return configError; }
         return addHighScore(request, env);
       }
 
       if (pathname === '/api/admin/migrate' && request.method === 'POST') {
+        const configError = getMissingConfigError(env, ['BETTER_AUTH_SECRET', 'DB', 'MIGRATION_API_KEY']);
+        if (configError) { return configError; }
         return runMigrations(request, env);
       }
 
@@ -255,53 +271,54 @@ async function addHighScore (request, env) {
 }
 
 async function runMigrations (request, env) {
-  if (!env.MIGRATION_API_KEY) {
-    return json({ error: 'MIGRATION_API_KEY is not configured' }, 503);
-  }
-
   if (request.headers.get('x-migration-key') !== env.MIGRATION_API_KEY) {
     return json({ error: 'Unauthorized' }, 401);
   }
 
-  const migrations = getMigrations(createAuthConfig(env, request));
-  for (const migration of migrations) {
-    const sql = migration.sql || migration.up;
-    if (!sql) { continue; }
-    await env.DB.exec(sql);
+  try {
+    const migrations = getMigrations(createAuthConfig(env, request));
+    for (const migration of migrations) {
+      const sql = migration.sql || migration.up;
+      if (!sql) { continue; }
+      await env.DB.exec(sql);
+    }
+
+    await env.DB.exec(`
+      CREATE TABLE IF NOT EXISTS favorites (
+        user_id TEXT NOT NULL,
+        challenge_id TEXT NOT NULL,
+        challenge_json TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        PRIMARY KEY (user_id, challenge_id)
+      );
+    `);
+
+    await env.DB.exec(`
+      CREATE TABLE IF NOT EXISTS high_scores (
+        id TEXT PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        challenge_id TEXT NOT NULL,
+        difficulty TEXT NOT NULL,
+        beatmap_characteristic TEXT NOT NULL,
+        game_mode TEXT NOT NULL,
+        score INTEGER NOT NULL,
+        accuracy REAL,
+        username TEXT NOT NULL,
+        created_at TEXT NOT NULL
+      );
+    `);
+
+    await env.DB.exec(`
+      CREATE INDEX IF NOT EXISTS idx_high_scores_lookup
+      ON high_scores (challenge_id, difficulty, beatmap_characteristic, game_mode, score DESC, created_at ASC);
+    `);
+
+    return json({ ok: true, migrationsApplied: migrations.length });
+  } catch (error) {
+    console.error('[migrations]', error);
+    return json({ error: `Migration failed: ${error?.message || 'Unknown error'}` }, 500);
   }
-
-  await env.DB.exec(`
-    CREATE TABLE IF NOT EXISTS favorites (
-      user_id TEXT NOT NULL,
-      challenge_id TEXT NOT NULL,
-      challenge_json TEXT NOT NULL,
-      created_at TEXT NOT NULL,
-      updated_at TEXT NOT NULL,
-      PRIMARY KEY (user_id, challenge_id)
-    );
-  `);
-
-  await env.DB.exec(`
-    CREATE TABLE IF NOT EXISTS high_scores (
-      id TEXT PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      challenge_id TEXT NOT NULL,
-      difficulty TEXT NOT NULL,
-      beatmap_characteristic TEXT NOT NULL,
-      game_mode TEXT NOT NULL,
-      score INTEGER NOT NULL,
-      accuracy REAL,
-      username TEXT NOT NULL,
-      created_at TEXT NOT NULL
-    );
-  `);
-
-  await env.DB.exec(`
-    CREATE INDEX IF NOT EXISTS idx_high_scores_lookup
-    ON high_scores (challenge_id, difficulty, beatmap_characteristic, game_mode, score DESC, created_at ASC);
-  `);
-
-  return json({ ok: true, migrationsApplied: migrations.length });
 }
 
 function sanitizeUsername (value, fallback = 'Player') {
@@ -325,4 +342,10 @@ function json (payload, status = 200) {
       'cache-control': 'no-store'
     }
   });
+}
+
+function getMissingConfigError (env, keys) {
+  const missing = keys.filter(key => !env[key]);
+  if (!missing.length) { return null; }
+  return json({ error: `Missing Worker config: ${missing.join(', ')}` }, 503);
 }
