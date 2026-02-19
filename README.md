@@ -45,7 +45,7 @@ Then head to `http://localhost:3000` in your browser.
 Moon Rider now expects:
 
 - Better Auth on `/api/auth/*`
-- Facebook social login
+- Discord OAuth sign-in
 - D1-backed favorites + high scores API
 
 1. Configure D1:
@@ -64,9 +64,13 @@ cp .dev.vars.example .dev.vars
 
 Fill values in `.dev.vars`.
 
-3. Configure Facebook OAuth app redirect URL:
+3. Configure Discord OAuth app.
 
-- `https://<your-domain>/api/auth/callback/facebook`
+- In Discord Developer Portal, create an OAuth2 app.
+- Add redirect URI: `https://<your-domain>/api/auth/callback/discord`
+- For local worker dev, also add: `http://127.0.0.1:8787/api/auth/callback/discord`
+- Set `DISCORD_CLIENT_ID`
+- Set `DISCORD_CLIENT_SECRET`
 
 4. Apply auth + app schema migrations:
 

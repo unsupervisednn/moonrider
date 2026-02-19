@@ -23,9 +23,15 @@ export async function getCurrentSession () {
   return { user: result.data.user || null, session: result.data.session || null };
 }
 
-export function signInWithFacebook () {
-  return authClient.signIn.social({
-    provider: 'facebook',
+export async function signInWithDiscord () {
+  const result = await authClient.signIn.social({
+    provider: 'discord',
     callbackURL: window.location.href
   });
+
+  if (result.error) {
+    throw new Error(result.error.message || 'Failed to start Discord sign-in');
+  }
+
+  return result.data;
 }

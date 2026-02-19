@@ -75,11 +75,11 @@ function createAuthConfig (env, request) {
     trustedOrigins
   };
 
-  if (env.FACEBOOK_CLIENT_ID && env.FACEBOOK_CLIENT_SECRET) {
+  if (env.DISCORD_CLIENT_ID && env.DISCORD_CLIENT_SECRET) {
     config.socialProviders = {
-      facebook: {
-        clientId: env.FACEBOOK_CLIENT_ID,
-        clientSecret: env.FACEBOOK_CLIENT_SECRET
+      discord: {
+        clientId: env.DISCORD_CLIENT_ID,
+        clientSecret: env.DISCORD_CLIENT_SECRET
       }
     };
   }

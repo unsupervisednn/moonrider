@@ -1,4 +1,4 @@
 BETTER_AUTH_SECRET=replace-with-strong-random-secret
-FACEBOOK_CLIENT_ID=replace-with-facebook-app-id
-FACEBOOK_CLIENT_SECRET=replace-with-facebook-app-secret
+DISCORD_CLIENT_ID=replace-with-discord-client-id
+DISCORD_CLIENT_SECRET=replace-with-discord-client-secret
 MIGRATION_API_KEY=replace-with-strong-random-migration-key

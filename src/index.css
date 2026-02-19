@@ -57,7 +57,7 @@ body {
 }
 
 .loginButton {
-  background: #1877f2;
+  background: #5865f2;
   border-radius: 9999px;
   color: #fff;
   font-weight: 600;
@@ -67,7 +67,7 @@ body {
 }
 
 .loginButton:hover {
-  background: #3888f2;
+  background: #6b76f5;
 }
 
 .loginButton:disabled {

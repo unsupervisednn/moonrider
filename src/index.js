@@ -5,7 +5,7 @@ console.timeEnd = () => {
 
 import './index.css';
 import sceneHtml from './generated/scene.html?raw';
-import { getCurrentSession, signInWithFacebook } from './lib/auth-client';
+import { getCurrentSession, signInWithDiscord } from './lib/auth-client';
 import { fetchFavorites } from './lib/api-client';
 
 let hasBootedScene = false;
@@ -105,28 +105,28 @@ function renderLogin (appEl, errorText = '') {
     <div class="loginGate">
       <div class="loginCard">
         <h1 class="loginTitle">Moon Rider</h1>
-        <p class="loginText">Sign in with Facebook to sync your favorites and high scores across devices.</p>
+        <p class="loginText">Sign in with Discord to sync your favorites and high scores across devices.</p>
         ${errorText ? `<p class="loginError">${errorText}</p>` : ''}
-        <button id="facebookLoginButton" class="loginButton">Continue with Facebook</button>
+        <button id="discordLoginButton" class="loginButton">Continue with Discord</button>
       </div>
     </div>
   `;
 
-  const loginButton = document.getElementById('facebookLoginButton');
+  const loginButton = document.getElementById('discordLoginButton');
   loginButton.addEventListener('click', async () => {
     loginButton.disabled = true;
     loginButton.textContent = 'Redirecting...';
 
     try {
-      await signInWithFacebook();
+      await signInWithDiscord();
     } catch (error) {
-      console.error('[auth] sign-in failed', error);
+      console.error('[auth] discord sign-in failed', error);
       loginButton.disabled = false;
-      loginButton.textContent = 'Continue with Facebook';
+      loginButton.textContent = 'Continue with Discord';
 
       const errorMessageEl = document.createElement('p');
       errorMessageEl.className = 'loginError';
-      errorMessageEl.textContent = 'Could not start Facebook login. Verify auth settings and try again.';
+      errorMessageEl.textContent = error.message || 'Could not start Discord login. Verify Discord OAuth settings and try again.';
 
       const cardEl = appEl.querySelector('.loginCard');
       const previous = cardEl.querySelector('.loginError');
