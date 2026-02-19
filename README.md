@@ -31,14 +31,71 @@ Big thanks to @elliottate for helping out with this!
 
 ## Development
 
-Have Node (< v12, recommended v11) and npm installed.
+Install Node `>=22.16.0` and pnpm.
 
-```
-npm install
-npm run start
+```bash
+pnpm install
+pnpm run start
 ```
 
-Then head to `localhost:3000` in your browser.
+Then head to `http://localhost:3000` in your browser.
+
+## Auth + D1 Setup (Cloudflare)
+
+Moon Rider now expects:
+
+- Better Auth on `/api/auth/*`
+- Facebook social login
+- D1-backed favorites + high scores API
+
+1. Configure D1:
+
+```bash
+pnpm dlx wrangler@latest d1 create moonrider
+```
+
+Copy the returned `database_id` into `wrangler.jsonc` under `d1_databases`.
+
+2. Set local env/secrets:
+
+```bash
+cp .dev.vars.example .dev.vars
+```
+
+Fill values in `.dev.vars`.
+
+3. Configure Facebook OAuth app redirect URL:
+
+- `https://<your-domain>/api/auth/callback/facebook`
+
+4. Apply auth + app schema migrations:
+
+```bash
+curl -X POST "http://127.0.0.1:8787/api/admin/migrate" \
+  -H "x-migration-key: <MIGRATION_API_KEY>"
+```
+
+5. Run worker-backed dev:
+
+```bash
+pnpm run start:worker
+```
+
+## GitHub Actions Deploy
+
+This repo includes `.github/workflows/deploy-worker.yml` to deploy on push to `main`.
+
+Add these repository secrets in GitHub:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+
+The workflow runs:
+
+```bash
+pnpm install --frozen-lockfile
+pnpm run deploy:cf:workers
+```
 
 ### Remixing and Forking
 

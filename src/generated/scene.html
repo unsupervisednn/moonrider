@@ -1,9 +1,6 @@
 <!-- https://freesound.org/people/deleted_user_2731495/sounds/183881/ -->
 <audio id="introSong" src="assets/sounds/menu.ogg" loop></audio>
 
-
-
-
 <a-scene
   bind__beat-generator="challengeId: challenge.id; difficulty: challenge.difficulty; beatmapCharacteristic: challenge.beatmapCharacteristic; gameMode: gameMode; has3DOFVR: has3DOFVR; hasSongLoadError: hasSongLoadError; isPlaying: isPlaying; isZipFetching: isZipFetching; menuSelectedChallengeId: menuSelectedChallenge.id; songDuration: challenge.metadata.duration; speed: speed"
   bind__beat-system="gameMode: gameMode; hasVR: hasVR; isLoading: isLoading; isPlaying: isPlaying"
@@ -27,7 +24,6 @@
   hack
   gpu-preloader
   
-  leaderboard="apiKey: AIzaSyAilakXLvMgwPcBcHs3oys51eLp4yrfz0w; authDomain: moonrider-prod.firebaseapp.com; databaseURL: https://moonrider-prod.firebaseio.com; projectId: moonrider-prod; storageBucket: moonrider-prod.appspot.com; messagingSenderId: 172125624222"
   loading-screen="backgroundColor: #000"
   pool__beat-arrow-blue="mixin: arrowBlueBeat; size: 30; container: #beatContainer; dynamic: true"
   pool__beat-arrow-red="mixin: arrowRedBeat; size: 30; container: #beatContainer; dynamic: true"

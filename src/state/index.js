@@ -4,6 +4,7 @@ import GENRES from '../constants/genres';
 import PLAYLISTS from '../constants/playlists';
 import * as utils from '../utils';
 import convertBeatmap from '../lib/convert-beatmap';
+import { addFavorite, removeFavorite } from '../lib/api-client';
 
 const challengeDataStore = {};
 let HAS_LOGGED_VR = false;
@@ -40,17 +41,10 @@ const DEBUG_CHALLENGE = {
 const SKIP_INTRO = AFRAME.utils.getUrlParameter('skipintro') === 'true';
 
 const colorScheme = localStorage.getItem('colorScheme') || 'default';
-
-let favorites = localStorage.getItem('favorites-v2');
-if (favorites) {
-  try {
-    favorites = JSON.parse(favorites).map(convertBeatmap);
-  } catch (e) {
-    favorites = [];
-  }
-} else {
-  favorites = [];
-}
+const authSession = globalThis.__MOONRIDER_AUTH_SESSION || null;
+const initialFavorites = Array.isArray(globalThis.__MOONRIDER_INITIAL_FAVORITES)
+  ? globalThis.__MOONRIDER_INITIAL_FAVORITES.map(convertBeatmap)
+  : [];
 
 /**
  * State handler.
@@ -95,13 +89,14 @@ AFRAME.registerState({
     damage: 0,
     difficultyFilter: 'All',
     difficultyFilterMenuOpen: false,
-    favorites: favorites,
+    favorites: initialFavorites,
     gameMode: 'ride',
     genre: '',
     genres: GENRES,
     genreMenuOpen: false,
     has3DOFVR: false,
     has6DOFVR: false,
+    isAuthenticated: !!authSession?.user?.id,
     hasSongLoadError: false,
     hasVR: AFRAME.utils.device.checkHeadsetConnected() ||
       AFRAME.utils.getUrlParameter('debugvr') === 'true',
@@ -351,6 +346,8 @@ AFRAME.registerState({
     },
 
     favoritetoggle: state => {
+      if (!state.isAuthenticated) { return; }
+
       const id = state.menuSelectedChallenge.id;
       const challenge = challengeDataStore[id];
 
@@ -362,7 +359,8 @@ AFRAME.registerState({
         for (let i = 0; i < state.favorites.length; i++) {
           if (state.favorites[i].id === id) {
             state.favorites.splice(i, 1);
-            localStorage.setItem('favorites-v2', JSON.stringify(state.favorites));
+            syncFavoriteChange('remove', id, challenge);
+            refreshFavoritesSearch(state);
             return;
           }
         }
@@ -370,8 +368,9 @@ AFRAME.registerState({
         // Favorite.
         state.menuSelectedChallenge.isFavorited = true;
         if (state.favorites.filter(favorite => favorite.id === id).length) { return; }
-        state.favorites.push(challenge)
-        localStorage.setItem('favorites-v2', JSON.stringify(state.favorites));
+        state.favorites.push(challenge);
+        syncFavoriteChange('add', id, challenge);
+        refreshFavoritesSearch(state);
       }
     },
 
@@ -990,6 +989,25 @@ function clearLeaderboard(state) {
   state.leaderboardNames = '';
   state.leaderboardScores = '';
   state.leaderboardFetched = false;
+}
+
+function refreshFavoritesSearch (state) {
+  if (state.playlist !== 'favorites') { return; }
+  state.search.results = [...state.favorites];
+  computeSearchPagination(state);
+}
+
+function syncFavoriteChange (action, challengeId, challenge) {
+  if (action === 'add') {
+    addFavorite(challenge).catch(error => {
+      console.error('[favorites] failed to add', challengeId, error);
+    });
+    return;
+  }
+
+  removeFavorite(challengeId).catch(error => {
+    console.error('[favorites] failed to remove', challengeId, error);
+  });
 }
 
 function updateMenuSongInfo(state, challenge) {

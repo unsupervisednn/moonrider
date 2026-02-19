@@ -40,13 +40,20 @@ function expandRequireTags (filePath, seen = new Set()) {
 }
 
 function main () {
+  let host = '127.0.0.1';
+  try {
+    host = ip.address();
+  } catch (error) {
+    process.stderr.write(`Unable to detect host address, defaulting to ${host}: ${error.message}\n`);
+  }
+
   const templateSource = expandRequireTags(ENTRY_TEMPLATE);
   const html = nunjucks.renderString(templateSource, {
     DEBUG_AFRAME: envFlag('DEBUG_AFRAME'),
     DEBUG_LOG: envFlag('DEBUG_LOG'),
     DEBUG_KEYBOARD: envFlag('DEBUG_KEYBOARD'),
     DEBUG_INSPECTOR: envFlag('DEBUG_INSPECTOR'),
-    HOST: ip.address(),
+    HOST: host,
     IS_PRODUCTION: process.env.NODE_ENV === 'production',
     COLORS
   });
