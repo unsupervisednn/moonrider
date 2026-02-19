@@ -44,13 +44,15 @@ AFRAME.registerComponent('search-thumbnail-atlas', {
     this.el.setAttribute('material', 'src', canvas);
     this.images = [];
 
-    this.lastNumResults = NUM_PER_PAGE;
+    // Force alpha map initialization on first update regardless of page size.
+    this.lastNumResults = -1;
   },
 
   update: function () {
     var el = this.el;
 
     const results = el.sceneEl.systems.state.state.searchResultsPage;
+    this.clearCanvas();
     for (let i = 0; i < results.length; i++) {
       let img = this.images[i] = this.images[i] || document.createElement('img');
       img.crossOrigin = 'anonymous';
