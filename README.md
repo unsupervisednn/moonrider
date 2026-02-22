@@ -40,6 +40,16 @@ pnpm run start
 
 Then head to `http://localhost:3000` in your browser.
 
+If you need to force a completely clean production output, run `pnpm run clean:build` before `pnpm run build`.
+
+If you need auth/favorites/high-scores while using Vite dev, run the Worker in a second terminal and keep Vite on port 3000:
+
+```bash
+pnpm dlx wrangler@latest dev --port 8787
+```
+
+Vite proxies `/api/*` to `http://127.0.0.1:8787` by default. Override with `API_PROXY_TARGET` in `.env.local` if needed.
+
 ## Auth + D1 Setup (Cloudflare)
 
 Moon Rider now expects:
@@ -77,6 +87,13 @@ Fill values in `.dev.vars`.
 ```bash
 curl -X POST "http://127.0.0.1:8787/api/admin/migrate" \
   -H "x-migration-key: <MIGRATION_API_KEY>"
+```
+
+If your dev proxy strips custom headers, you can send the key as bearer auth:
+
+```bash
+curl -X POST "https://8787-code.combinator.dev/api/admin/migrate" \
+  -H "authorization: Bearer <MIGRATION_API_KEY>"
 ```
 
 5. Run worker-backed dev:

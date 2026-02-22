@@ -25,23 +25,54 @@ function copyStaticAssetsPlugin () {
     closeBundle () {
       const sourceDir = path.resolve(process.cwd(), 'assets');
       const destinationDir = path.resolve(process.cwd(), outDir, 'assets');
-      fs.cpSync(sourceDir, destinationDir, { recursive: true, force: true });
+      copyDirectoryRecursive(sourceDir, destinationDir);
     }
   };
 }
 
+function copyDirectoryRecursive (sourceDir, destinationDir) {
+  fs.mkdirSync(destinationDir, { recursive: true });
+
+  const entries = fs.readdirSync(sourceDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const sourcePath = path.join(sourceDir, entry.name);
+    const destinationPath = path.join(destinationDir, entry.name);
+
+    if (entry.isDirectory()) {
+      copyDirectoryRecursive(sourcePath, destinationPath);
+      continue;
+    }
+
+    if (!entry.isFile()) {
+      continue;
+    }
+
+    fs.copyFileSync(sourcePath, destinationPath);
+  }
+}
+
+// console.log('env', JSON.stringify(process.env, null, 2));
+
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
-  const hosts = (process.env.HOSTS ?? '').split(',').map(host => host.trim()).filter(Boolean);
+  const hosts = (env.HOSTS ?? process.env.HOSTS ?? '').split(',').map(host => host.trim()).filter(Boolean);
+  const apiProxyTarget = env.API_PROXY_TARGET ?? process.env.API_PROXY_TARGET ?? 'http://127.0.0.1:8787';
 
   return {
     base: './',
     server: {
       allowedHosts: hosts,
+      proxy: {
+        '/api': {
+          target: apiProxyTarget,
+          changeOrigin: true,
+          secure: false
+        }
+      }
     },
     build: {
       outDir: 'build',
-      emptyOutDir: true
+      emptyOutDir: false
     },
     define: {
       'process.env.NODE_ENV': JSON.stringify(mode),

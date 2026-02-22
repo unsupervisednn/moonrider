@@ -292,7 +292,9 @@ async function addHighScore (request, env) {
 }
 
 async function runMigrations (request, env) {
-  if (request.headers.get('x-migration-key') !== env.MIGRATION_API_KEY) {
+  const providedKey = getProvidedMigrationKey(request);
+  const expectedKey = (env.MIGRATION_API_KEY || '').trim();
+  if (!providedKey || providedKey !== expectedKey) {
     return json({ error: 'Unauthorized' }, 401);
   }
 
@@ -426,6 +428,26 @@ async function runMigrations (request, env) {
     console.error('[migrations]', error);
     return json({ error: `Migration failed: ${error?.message || 'Unknown error'}` }, 500);
   }
+}
+
+function getProvidedMigrationKey (request) {
+  const migrationHeader = request.headers.get('x-migration-key');
+  if (migrationHeader) {
+    return migrationHeader.trim();
+  }
+
+  const authorization = request.headers.get('authorization') || '';
+  if (authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.slice('bearer '.length).trim();
+  }
+
+  const url = new URL(request.url);
+  const queryKey = url.searchParams.get('migrationKey') || url.searchParams.get('key');
+  if (queryKey) {
+    return queryKey.trim();
+  }
+
+  return '';
 }
 
 function sanitizeUsername (value, fallback = 'Player') {

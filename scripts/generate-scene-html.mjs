@@ -59,8 +59,18 @@ function main () {
   });
 
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
+  const relativeOutFile = path.relative(ROOT, OUT_FILE);
+  const hasExistingFile = fs.existsSync(OUT_FILE);
+  if (hasExistingFile) {
+    const existing = fs.readFileSync(OUT_FILE, 'utf8');
+    if (existing === html) {
+      process.stdout.write(`${relativeOutFile} is up to date\n`);
+      return;
+    }
+  }
+
   fs.writeFileSync(OUT_FILE, html);
-  process.stdout.write(`Generated ${path.relative(ROOT, OUT_FILE)}\n`);
+  process.stdout.write(`Generated ${relativeOutFile}\n`);
 }
 
 main();

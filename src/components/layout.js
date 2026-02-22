@@ -77,7 +77,7 @@ AFRAME.registerComponent('layout', {
       const offsetX = (usedCols - 1) * colStep / 2;
       const offsetY = (rows - 1) * rowStep / 2;
       for (const child of children) {
-        this.offsetChildPosition(child, -offsetX, offsetY);
+        this.offsetChildPosition(child, -offsetX, -offsetY);
       }
     }
   },

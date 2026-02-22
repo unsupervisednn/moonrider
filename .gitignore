@@ -51,3 +51,5 @@ idea/
 .idea/
 
 .dev.vars
+.env.local
+.wrangler

@@ -4,6 +4,7 @@
   "packageManager": "pnpm@10.18.3",
   "scripts": {
     "build": "pnpm run generate:scene && vite build",
+    "clean:build": "rm -rf build",
     "deploy": "pnpm run deploy:cf:pages",
     "deploy:cf:pages": "pnpm run build && pnpm dlx wrangler@latest pages deploy build --project-name moonrider",
     "deploy:cf:workers": "pnpm dlx wrangler@latest deploy",
